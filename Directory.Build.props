@@ -1,0 +1,13 @@
+<Project>
+  <PropertyGroup>
+    <Authors>Ari Sulistiono</Authors>
+    <Company>Mas Ari Engineering Tools</Company>
+    <Product>ARNet Discovery</Product>
+    <Copyright>Copyright 2026 Ari Sulistiono</Copyright>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+</Project>

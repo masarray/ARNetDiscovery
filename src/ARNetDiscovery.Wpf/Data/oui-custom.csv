@@ -1,0 +1,7 @@
+# Optional local OUI vendor lookup table.
+# Keep this file lightweight to avoid licensing issues with redistributed third-party OUI databases.
+# Format: prefix,vendor
+# Examples below use documentation-style placeholder prefixes. Replace with your approved internal/company OUI data if needed.
+prefix,vendor
+001122,Example Vendor
+AABBCC,Example Industrial Vendor

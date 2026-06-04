@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>ARNetDiscovery</AssemblyName>
+    <RootNamespace>ARNetDiscovery.Wpf</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ARNetDiscovery.Core\ARNetDiscovery.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Data\oui-custom.csv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

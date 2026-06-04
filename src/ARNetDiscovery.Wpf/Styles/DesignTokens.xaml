@@ -1,0 +1,41 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Premium light palette (v1.8) -->
+    <Color x:Key="ColorShell">#F4F6F8</Color>
+    <Color x:Key="ColorCanvas">#F7F9FB</Color>
+    <Color x:Key="ColorCard">#FFFFFFFF</Color>
+    <Color x:Key="ColorPanel">#FFFFFFFF</Color>
+    <Color x:Key="ColorInk">#0F172A</Color>
+    <Color x:Key="ColorBody">#334155</Color>
+    <Color x:Key="ColorMuted">#94A3B8</Color>
+    <Color x:Key="ColorSoft">#F1F5F9</Color>
+    <Color x:Key="ColorLine">#E5E9EF</Color>
+    <Color x:Key="ColorAccent">#2EC4E6</Color>
+    <Color x:Key="ColorAccentDeep">#0EA5C4</Color>
+    <Color x:Key="ColorAccentGlow">#7ADCEF</Color>
+    <Color x:Key="ColorAccentSoft">#E8F7FB</Color>
+    <Color x:Key="ColorTeal">#22C55E</Color>
+    <Color x:Key="ColorAmber">#D99724</Color>
+    <Color x:Key="ColorDanger">#EF4444</Color>
+
+    <SolidColorBrush x:Key="BrushShell" Color="{StaticResource ColorShell}" />
+    <SolidColorBrush x:Key="BrushCanvas" Color="{StaticResource ColorCanvas}" />
+    <SolidColorBrush x:Key="BrushCard" Color="{StaticResource ColorCard}" />
+    <SolidColorBrush x:Key="BrushPanel" Color="{StaticResource ColorPanel}" />
+    <SolidColorBrush x:Key="BrushInk" Color="{StaticResource ColorInk}" />
+    <SolidColorBrush x:Key="BrushBody" Color="{StaticResource ColorBody}" />
+    <SolidColorBrush x:Key="BrushMuted" Color="{StaticResource ColorMuted}" />
+    <SolidColorBrush x:Key="BrushSoft" Color="{StaticResource ColorSoft}" />
+    <SolidColorBrush x:Key="BrushLine" Color="{StaticResource ColorLine}" />
+    <SolidColorBrush x:Key="BrushAccent" Color="{StaticResource ColorAccent}" />
+    <SolidColorBrush x:Key="BrushAccentDeep" Color="{StaticResource ColorAccentDeep}" />
+    <SolidColorBrush x:Key="BrushAccentGlow" Color="{StaticResource ColorAccentGlow}" />
+    <SolidColorBrush x:Key="BrushAccentSoft" Color="{StaticResource ColorAccentSoft}" />
+    <SolidColorBrush x:Key="BrushTeal" Color="{StaticResource ColorTeal}" />
+    <SolidColorBrush x:Key="BrushAmber" Color="{StaticResource ColorAmber}" />
+    <SolidColorBrush x:Key="BrushDanger" Color="{StaticResource ColorDanger}" />
+
+    <DropShadowEffect x:Key="ShadowSoft" BlurRadius="14" ShadowDepth="3" Opacity="0.05" Color="#0F172A" />
+    <DropShadowEffect x:Key="ShadowLift" BlurRadius="22" ShadowDepth="6" Opacity="0.08" Color="#0F172A" />
+    <DropShadowEffect x:Key="ShadowPop" BlurRadius="28" ShadowDepth="8" Opacity="0.12" Color="#0EA5C4" />
+</ResourceDictionary>

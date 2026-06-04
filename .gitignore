@@ -1,0 +1,31 @@
+# Build output
+bin/
+obj/
+artifacts/
+TestResults/
+.vs/
+.vscode/
+.idea/
+
+# User/local files
+*.user
+*.suo
+*.rsuser
+*.userosscache
+*.sln.docstates
+
+# Logs and diagnostics
+*.log
+logs/
+
+# Publish output
+publish/
+*.nupkg
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Large/generated packages
+node_modules/
+dist/

@@ -1,0 +1,117 @@
+<UserControl x:Class="ARNetDiscovery.Wpf.Controls.HexDeviceTile"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:conv="clr-namespace:ARNetDiscovery.Wpf.Converters"
+             mc:Ignorable="d"
+             Width="208" Height="184"
+             Background="Transparent"
+             SnapsToDevicePixels="True"
+             UseLayoutRounding="True">
+    <UserControl.Resources>
+        <conv:StatusBrushConverter x:Key="HexStatusBrush" />
+        <conv:LucideIconConverter x:Key="HexKindIcon" />
+        <conv:StatusLabelConverter x:Key="HexStatusLabel" />
+
+        <!-- Flat-top hex polygon points relative to a 200x176 box,
+             rendered inside a 208x184 user control with 4px breathing room. -->
+        <PointCollection x:Key="HexPoints">54,4 154,4 204,92 154,180 54,180 4,92</PointCollection>
+
+        <LinearGradientBrush x:Key="HexFill" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Offset="0" Color="#FFFFFFFF" />
+            <GradientStop Offset="1" Color="#FFF1FAFD" />
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="HexFillOnline" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Offset="0" Color="#FFFFFFFF" />
+            <GradientStop Offset="1" Color="#FFE9F9F1" />
+        </LinearGradientBrush>
+    </UserControl.Resources>
+
+    <Grid>
+        <!-- Soft status halo behind the hex (no effect, just opaque fill) -->
+        <Polygon x:Name="Halo"
+                 Points="{StaticResource HexPoints}"
+                 Stretch="None"
+                 Fill="{Binding Status, Converter={StaticResource HexStatusBrush}}"
+                 Opacity="0.10"
+                 RenderTransformOrigin="0.5,0.5">
+            <Polygon.RenderTransform>
+                <ScaleTransform ScaleX="1.06" ScaleY="1.06" />
+            </Polygon.RenderTransform>
+        </Polygon>
+
+        <!-- Main hex -->
+        <Polygon x:Name="HexBody"
+                 Points="{StaticResource HexPoints}"
+                 Fill="{StaticResource HexFill}"
+                 Stroke="#CFE6F0"
+                 StrokeThickness="1.2"
+                 StrokeLineJoin="Round" />
+
+        <!-- Top-right status dot -->
+        <Border Width="14" Height="14" CornerRadius="7"
+                HorizontalAlignment="Right" VerticalAlignment="Top"
+                Margin="0,18,28,0"
+                Background="#FFFFFF"
+                BorderBrush="#E1ECF2" BorderThickness="1">
+            <Ellipse Width="7" Height="7"
+                     Fill="{Binding Status, Converter={StaticResource HexStatusBrush}}"
+                     HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Border>
+
+        <!-- Wi-Fi mark in top-left (decorative) -->
+        <Path Data="{Binding Converter={StaticResource HexKindIcon}, ConverterParameter=wifi}"
+              Width="14" Height="14" Stretch="Uniform"
+              Stroke="{Binding Status, Converter={StaticResource HexStatusBrush}}"
+              StrokeThickness="1.8"
+              StrokeStartLineCap="Round"
+              StrokeEndLineCap="Round"
+              StrokeLineJoin="Round"
+              Fill="Transparent"
+              HorizontalAlignment="Left" VerticalAlignment="Top"
+              Margin="30,18,0,0" Opacity="0.85" />
+
+        <!-- Content stack centered -->
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,8,0,0">
+            <Border Width="44" Height="44" CornerRadius="14"
+                    Background="#F1FAFD" BorderBrush="#CFEAF3" BorderThickness="1"
+                    HorizontalAlignment="Center">
+                <Path Data="{Binding Kind, Converter={StaticResource HexKindIcon}}"
+                      Width="20" Height="20" Stretch="Uniform"
+                      Stroke="{StaticResource BrushAccentDeep}"
+                      StrokeThickness="1.8"
+                      StrokeStartLineCap="Round"
+                      StrokeEndLineCap="Round"
+                      StrokeLineJoin="Round"
+                      Fill="Transparent"
+                      HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+
+            <TextBlock Text="{Binding Ip}"
+                       FontSize="13" FontWeight="SemiBold"
+                       Foreground="{StaticResource BrushInk}"
+                       HorizontalAlignment="Center"
+                       Margin="0,8,0,0" />
+
+            <TextBlock Text="{Binding Vendor, TargetNullValue=Unknown vendor}"
+                       FontSize="10"
+                       Foreground="{StaticResource BrushMuted}"
+                       HorizontalAlignment="Center"
+                       MaxWidth="150"
+                       TextTrimming="CharacterEllipsis"
+                       Margin="0,2,0,0" />
+        </StackPanel>
+
+        <!-- Bottom status chip -->
+        <Border HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                Margin="0,0,0,14"
+                CornerRadius="8" Padding="7,2"
+                Background="#F5F9FC" BorderBrush="#E1ECF2" BorderThickness="1">
+            <TextBlock Text="{Binding Status, Converter={StaticResource HexStatusLabel}}"
+                       FontSize="9" FontWeight="SemiBold"
+                       Foreground="{Binding Status, Converter={StaticResource HexStatusBrush}}" />
+        </Border>
+    </Grid>
+</UserControl>

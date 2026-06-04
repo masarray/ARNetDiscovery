@@ -1,0 +1,30 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ARNetDiscovery.Core", "src\ARNetDiscovery.Core\ARNetDiscovery.Core.csproj", "{37A27577-CA75-455E-AD59-E7C6342D6A11}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ARNetDiscovery.Wpf", "src\ARNetDiscovery.Wpf\ARNetDiscovery.Wpf.csproj", "{1F931E85-2152-4E13-8C56-29A4892EE409}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ARNetDiscovery.Cli", "src\ARNetDiscovery.Cli\ARNetDiscovery.Cli.csproj", "{5D0473BC-7697-4B2D-9E4F-9D39E65EA627}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{37A27577-CA75-455E-AD59-E7C6342D6A11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37A27577-CA75-455E-AD59-E7C6342D6A11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37A27577-CA75-455E-AD59-E7C6342D6A11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37A27577-CA75-455E-AD59-E7C6342D6A11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F931E85-2152-4E13-8C56-29A4892EE409}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F931E85-2152-4E13-8C56-29A4892EE409}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F931E85-2152-4E13-8C56-29A4892EE409}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F931E85-2152-4E13-8C56-29A4892EE409}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D0473BC-7697-4B2D-9E4F-9D39E65EA627}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D0473BC-7697-4B2D-9E4F-9D39E65EA627}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D0473BC-7697-4B2D-9E4F-9D39E65EA627}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D0473BC-7697-4B2D-9E4F-9D39E65EA627}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
