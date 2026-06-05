@@ -1,0 +1,144 @@
+using System;
+using System.Globalization;
+using System.Linq;
+using System.Windows;
+using System.Windows.Data;
+using System.Windows.Media;
+using ARNetDiscovery.Core.Models;
+
+namespace ARNetDiscovery.Wpf.Converters;
+
+/// <summary>
+/// Lightweight Material-symbol style icon resolver.
+/// Uses embedded vector geometries so ARNet does not need bundled font files.
+/// </summary>
+public sealed class MaterialIconConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        var key = ResolveKey(value, parameter as string);
+        return Geometry.Parse(DataFor(key));
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
+
+    private static string ResolveKey(object value, string? parameter)
+    {
+        if (!string.IsNullOrWhiteSpace(parameter))
+            return parameter!;
+
+        return value switch
+        {
+            DiscoveredDeviceSnapshot snapshot => SnapshotToKey(snapshot),
+            DeviceKind kind => KindToKey(kind),
+            string text => text,
+            _ => "devices"
+        };
+    }
+
+    private static string SnapshotToKey(DiscoveredDeviceSnapshot snapshot)
+    {
+        var hint = string.Join(" ", new[]
+            {
+                snapshot.ExpectedType,
+                snapshot.ExpectedDeviceName,
+                snapshot.HostName,
+                snapshot.HostTitle,
+                snapshot.ProtocolSummary,
+                snapshot.Evidence
+            }
+            .Where(v => !string.IsNullOrWhiteSpace(v)))
+            .ToLowerInvariant();
+
+        if (hint.Contains("printer") || hint.Contains("laserjet") || hint.Contains("print"))
+            return "print";
+
+        if (snapshot.Kind == DeviceKind.ServerOrWorkstation)
+        {
+            hint = string.Join(" ", new[]
+                {
+                    snapshot.ExpectedType,
+                    snapshot.ExpectedDeviceName,
+                    snapshot.HostName,
+                    snapshot.HostTitle,
+                    snapshot.ProtocolSummary,
+                    snapshot.Evidence
+                }
+                .Where(v => !string.IsNullOrWhiteSpace(v)))
+                .ToLowerInvariant();
+
+            if (hint.Contains("server") || hint.Contains("wincc") || hint.Contains("historian") || hint.Contains("nas") || hint.Contains("sas server") || hint.Contains("gateway server"))
+                return "hard_drive";
+
+            return "monitor";
+        }
+
+        return KindToKey(snapshot.Kind);
+    }
+
+    private static string KindToKey(DeviceKind kind) => kind switch
+    {
+        DeviceKind.ProtectionRelay => "dock_to_left",
+        DeviceKind.BayController => "dock_to_left",
+        DeviceKind.Gateway => "router",
+        DeviceKind.ManagedSwitch => "router",
+        DeviceKind.PlcOrController => "dock_to_left",
+        DeviceKind.Meter => "speed",
+        DeviceKind.SerialServer => "router",
+        DeviceKind.EngineeringLaptop => "laptop",
+        DeviceKind.ServerOrWorkstation => "monitor",
+        DeviceKind.WebManagedDevice => "public",
+        _ => "devices"
+    };
+
+    private static string DataFor(string key) => key.Trim().ToLowerInvariant() switch
+    {
+        "add" => "M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z",
+        "analytics" => "M3,3H21V21H3V3M7,17H9V10H7V17M11,17H13V7H11V17M15,17H17V13H15V17Z",
+        "bolt" => "M11,21H9L11,14H7.5C6.7,14 6.3,13.1 6.8,12.5L14,3H16L14,10H17.5C18.3,10 18.7,10.9 18.2,11.5L11,21Z",
+        "bug_report" => "M20,8H17.2C16.8,7.4 16.3,6.9 15.7,6.5L17,5.2L15.6,3.8L13.8,5.6C13.2,5.2 12.6,5 12,5C11.4,5 10.8,5.2 10.2,5.6L8.4,3.8L7,5.2L8.3,6.5C7.7,6.9 7.2,7.4 6.8,8H4V10H6.1C6,10.3 6,10.7 6,11V12H4V14H6V15C6,15.3 6,15.7 6.1,16H4V18H6.8C7.7,19.8 9.7,21 12,21C14.3,21 16.3,19.8 17.2,18H20V16H17.9C18,15.7 18,15.3 18,15V14H20V12H18V11C18,10.7 18,10.3 17.9,10H20V8M10,17H8V15H10V17M10,13H8V11H10V13M16,17H14V15H16V17M16,13H14V11H16V13Z",
+        "check_circle" => "M12,2A10,10 0,1 0,12,22A10,10 0,0 0,12,2M10,15.2L6.8,12L5.4,13.4L10,18L19,9L17.6,7.6L10,15.2Z",
+        "close" => "M18.3,5.7L12,12L5.7,5.7L4.3,7.1L10.6,13.4L4.3,19.7L5.7,21.1L12,14.8L18.3,21.1L19.7,19.7L13.4,13.4L19.7,7.1L18.3,5.7Z",
+        "chevron_circle_left" => "M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm40-240 56-56-104-104 104-104-56-56-160 160 160 160Z",
+        "chevron_circle_right" => "M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80ZM440-320l160-160-160-160-56 56 104 104-104 104 56 56Z",
+        "chevron_circle_up" => "M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-520L320-440l56 56 104-104 104 104 56-56-160-160Z",
+        "chevron_circle_down" => "M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80ZM480-360l160-160-56-56-104 104-104-104-56 56 160 160Z",
+        "content_copy" => "M16,1H4C2.9,1 2,1.9 2,3V17H4V3H16V1M19,5H8C6.9,5 6,5.9 6,7V21C6,22.1 6.9,23 8,23H19C20.1,23 21,22.1 21,21V7C21,5.9 20.1,5 19,5M19,21H8V7H19V21Z",
+        "desktop_windows" => "M20,3H4C2.9,3 2,3.9 2,5V16C2,17.1 2.9,18 4,18H10V20H8V22H16V20H14V18H20C21.1,18 22,17.1 22,16V5C22,3.9 21.1,3 20,3M20,16H4V5H20V16Z",
+        "devices" => "M4,6H20V16H4V6M2,18H22V20H2V18M7,8H10V10H7V8M12,8H17V10H12V8M7,12H15V14H7V12Z",
+        "dns" => "M4,6H20V10H4V6M6,7.5A1,1 0,1 0,6,9.5A1,1 0,0 0,6,7.5M4,14H20V18H4V14M6,15.5A1,1 0,1 0,6,17.5A1,1 0,0 0,6,15.5Z",
+        "dock_to_left" => "M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm440-80h120v-560H640v560Zm-80 0v-560H200v560h360Zm80 0h120-120Z",
+        "download" => "M5,20H19V18H5V20M19,9H15V3H9V9H5L12,16L19,9Z",
+        "excel" => "M5,3H15L21,9V21H5V3M14,4.5V10H19.5M8,12L10,15L8,18H10.2L11.1,16.5L12,18H14.2L12.2,15L14.2,12H12L11.1,13.5L10.2,12H8Z",
+        "list_add" => "M680-40v-120H560v-80h120v-120h80v120h120v80H760v120h-80ZM200-200v-560 560Zm0 80q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v353q-18-11-38-18t-42-11v-324H200v560h280q0 21 3 41t10 39H200Zm148.5-171.5Q360-303 360-320t-11.5-28.5Q337-360 320-360t-28.5 11.5Q280-337 280-320t11.5 28.5Q303-280 320-280t28.5-11.5Zm0-160Q360-463 360-480t-11.5-28.5Q337-520 320-520t-28.5 11.5Q280-497 280-480t11.5 28.5Q303-440 320-440t28.5-11.5Zm0-160Q360-623 360-640t-11.5-28.5Q337-680 320-680t-28.5 11.5Q280-657 280-640t11.5 28.5Q303-600 320-600t28.5-11.5ZM440-440h240v-80H440v80Zm0-160h240v-80H440v80Zm0 320h54q8-23 20-43t28-37H440v80Z",
+        "export_device" => "m648-140 112-112v92h40v-160H640v40h92L620-168l28 28Zm-448 20q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v268q-19-9-39-15.5t-41-9.5v-243H200v560h242q3 22 9.5 42t15.5 38H200Zm0-120v40-560 243-3 280Zm80-40h163q3-21 9.5-41t14.5-39H280v80Zm0-160h244q32-30 71.5-50t84.5-27v-3H280v80Zm0-160h400v-80H280v80ZM720-40q-83 0-141.5-58.5T520-240q0-83 58.5-141.5T720-440q83 0 141.5 58.5T920-240q0 83-58.5 141.5T720-40Z",
+        "file_upload" => "M5,20H19V18H5V20M19,15H15V9H9V15H5L12,8L19,15Z",
+        "filter_alt" => "M3,5H21L14,13V19L10,21V13L3,5Z",
+        "folder_open" => "M19,6H12.8L10.8,4H5C3.9,4 3,4.9 3,6V18C3,19.1 3.9,20 5,20H19C20.1,20 21,19.1 21,18V8C21,6.9 20.1,6 19,6M19,18H5V8H19V18Z",
+        "hard_drive" => "M160-280h640v-240H160v240Zm562.5-77.5Q740-375 740-400t-17.5-42.5Q705-460 680-460t-42.5 17.5Q620-425 620-400t17.5 42.5Q655-340 680-340t42.5-17.5ZM880-600H767l-80-80H273l-80 80H80l137-137q11-11 25.5-17t30.5-6h414q16 0 30.5 6t25.5 17l137 137ZM160-200q-33 0-56.5-23.5T80-280v-320h800v320q0 33-23.5 56.5T800-200H160Z",
+        "hub" => "M12,2A3,3 0,0 0,9,5C9,6.3 9.8,7.4 11,7.8V10.2L7.5,12.2A3,3 0,1 0,8.5,14L12,12L15.5,14A3,3 0,1 0,16.5,12.2L13,10.2V7.8C14.2,7.4 15,6.3 15,5A3,3 0,0 0,12,2Z",
+        "info" => "M11,17H13V11H11V17M11,9H13V7H11V9M12,2A10,10 0,1 0,12,22A10,10 0,0 0,12,2Z",
+        "laptop" => "M20,18C21.1,18 22,17.1 22,16V5C22,3.9 21.1,3 20,3H4C2.9,3 2,3.9 2,5V16C2,17.1 2.9,18 4,18H0V20H24V18H20M4,5H20V16H4V5Z",
+        "memory" => "M7,5H17C18.1,5 19,5.9 19,7V17C19,18.1 18.1,19 17,19H7C5.9,19 5,18.1 5,17V7C5,5.9 5.9,5 7,5M8,8V16H16V8H8M2,9H4V11H2V9M2,13H4V15H2V13M20,9H22V11H20V9M20,13H22V15H20V13M9,2H11V4H9V2M13,2H15V4H13V2M9,20H11V22H9V20M13,20H15V22H13V20Z",
+        "minimize" => "M6,19H18V17H6V19Z",
+        "monitor" => "M240-120v-80l40-40H160q-33 0-56.5-23.5T80-320v-440q0-33 23.5-56.5T160-840h640q33 0 56.5 23.5T880-760v440q0 33-23.5 56.5T800-240H680l40 40v80H240Zm-80-200h640v-440H160v440Zm0 0v-440 440Z",
+        "open_in_full" => "M5,5H11V7H8.4L12.7,11.3L11.3,12.7L7,8.4V11H5V5M13,5H19V11H17V8.4L12.7,12.7L11.3,11.3L15.6,7H13V5M5,13H7V15.6L11.3,11.3L12.7,12.7L8.4,17H11V19H5V13M17,15.6V13H19V19H13V17H15.6L11.3,12.7L12.7,11.3L17,15.6Z",
+        "play_arrow" => "M8,5V19L19,12L8,5Z",
+        "print" => "M19,8H5V3H19V8M19,12A2,2 0,1 0,19,16A2,2 0,0 0,19,12M17,19V14H7V19H17M19,10C20.7,10 22,11.3 22,13V19H18V21H6V19H2V13C2,11.3 3.3,10 5,10H19Z",
+
+        "public" => "M12,2A10,10 0,1 0,12,22A10,10 0,0 0,12,2M18.9,8H15.9C15.6,6.7 15.1,5.4 14.5,4.3A8.1,8.1 0,0 1,18.9,8M12,4.1C12.8,5.3 13.5,6.6 13.8,8H10.2C10.5,6.6 11.2,5.3 12,4.1M4.3,14C4.1,13.4 4,12.7 4,12C4,11.3 4.1,10.6 4.3,10H7.7C7.6,10.7 7.5,11.3 7.5,12C7.5,12.7 7.6,13.3 7.7,14H4.3M5.1,16H8.1C8.4,17.3 8.9,18.6 9.5,19.7A8.1,8.1 0,0 1,5.1,16M8.1,8H5.1A8.1,8.1 0,0 1,9.5,4.3C8.9,5.4 8.4,6.7 8.1,8M12,19.9C11.2,18.7 10.5,17.4 10.2,16H13.8C13.5,17.4 12.8,18.7 12,19.9M14.2,14H9.8C9.6,13.3 9.5,12.7 9.5,12C9.5,11.3 9.6,10.7 9.8,10H14.2C14.4,10.7 14.5,11.3 14.5,12C14.5,12.7 14.4,13.3 14.2,14M14.5,19.7C15.1,18.6 15.6,17.3 15.9,16H18.9A8.1,8.1 0,0 1,14.5,19.7M16.3,14C16.4,13.3 16.5,12.7 16.5,12C16.5,11.3 16.4,10.7 16.3,10H19.7C19.9,10.6 20,11.3 20,12C20,12.7 19.9,13.4 19.7,14H16.3Z",
+        "refresh" => "M17.7,6.3C16.2,4.9 14.2,4 12,4A8,8 0,0 0,4,12H2.5L5.5,15L8.5,12H6A6,6 0,0 1,12,6C13.7,6 15.3,6.7 16.4,7.8L17.7,6.3M18.5,9L15.5,12H18A6,6 0,0 1,12,18C10.3,18 8.7,17.3 7.6,16.2L6.3,17.7C7.8,19.1 9.8,20 12,20A8,8 0,0 0,20,12H21.5L18.5,9Z",
+        "router" => "M200-120q-33 0-56.5-23.5T120-200v-160q0-33 23.5-56.5T200-440h400v-160h80v160h80q33 0 56.5 23.5T840-360v160q0 33-23.5 56.5T760-120H200Zm0-80h560v-160H200v160Zm108.5-51.5Q320-263 320-280t-11.5-28.5Q297-320 280-320t-28.5 11.5Q240-297 240-280t11.5 28.5Q263-240 280-240t28.5-11.5Zm140 0Q460-263 460-280t-11.5-28.5Q437-320 420-320t-28.5 11.5Q380-297 380-280t11.5 28.5Q403-240 420-240t28.5-11.5Zm140 0Q600-263 600-280t-11.5-28.5Q577-320 560-320t-28.5 11.5Q520-297 520-280t11.5 28.5Q543-240 560-240t28.5-11.5ZM570-630l-58-58q26-24 58-38t70-14q38 0 70 14t58 38l-58 58q-14-14-31.5-22t-38.5-8q-21 0-38.5 8T570-630ZM470-730l-56-56q44-44 102-69t124-25q66 0 124 25t102 69l-56 56q-33-33-76.5-51.5T640-800q-50 0-93.5 18.5T470-730ZM200-200v-160 160Z",
+        "science" => "M9,2V4H10V10.6L5.1,18.8C4.2,20.3 5.3,22 7,22H17C18.7,22 19.8,20.3 18.9,18.8L14,10.6V4H15V2H9M12,13.5L15.8,20H8.2L12,13.5Z",
+        "search" => "M9.5,3C5.9,3 3,5.9 3,9.5S5.9,16 9.5,16C11.1,16 12.6,15.4 13.7,14.5L19.2,20L20.5,18.7L15,13.2C15.8,12.1 16,10.8 16,9.5C16,5.9 13.1,3 9.5,3M9.5,5C12,5 14,7 14,9.5S12,14 9.5,14 5,12 5,9.5 7,5 9.5,5Z",
+        "toggle_on" => "M280-240q-100 0-170-70T40-480q0-100 70-170t170-70h400q100 0 170 70t70 170q0 100-70 170t-170 70H280Zm400-120q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35Z",
+        "toggle_off" => "M280-240q-100 0-170-70T40-480q0-100 70-170t170-70h400q100 0 170 70t70 170q0 100-70 170t-170 70H280Zm0-120q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35Z",
+        "settings" => "M19.4,13.5C19.5,13 19.5,12.5 19.5,12C19.5,11.5 19.5,11 19.4,10.5L21.5,8.9L19.5,5.4L17,6.4C16.2,5.8 15.4,5.3 14.5,5L14.1,2.3H9.9L9.5,5C8.6,5.3 7.8,5.8 7,6.4L4.5,5.4L2.5,8.9L4.6,10.5C4.5,11 4.5,11.5 4.5,12C4.5,12.5 4.5,13 4.6,13.5L2.5,15.1L4.5,18.6L7,17.6C7.8,18.2 8.6,18.7 9.5,19L9.9,21.7H14.1L14.5,19C15.4,18.7 16.2,18.2 17,17.6L19.5,18.6L21.5,15.1L19.4,13.5M12,15.5A3.5,3.5 0,1 1,12,8.5A3.5,3.5 0,0 1,12,15.5Z",
+        "shield" => "M12,2L4,5.5V11.5C4,16.5 7.4,21.1 12,22C16.6,21.1 20,16.5 20,11.5V5.5L12,2M12,4.2L18,6.9V11.5C18,15.4 15.6,18.9 12,19.9C8.4,18.9 6,15.4 6,11.5V6.9L12,4.2Z",
+        "speed" => "M12,4A10,10 0,0 0,2,14C2,16.6 3,19 4.7,20.7L6.1,19.3C4.8,17.9 4,16 4,14A8,8 0,1 1,20,14C20,16 19.2,17.9 17.9,19.3L19.3,20.7C21,19 22,16.6 22,14A10,10 0,0 0,12,4M13,13.7L17.5,9.2L16.1,7.8L11.6,12.3C11.2,12.2 10.8,12.3 10.5,12.6C9.7,13.4 9.7,14.6 10.5,15.4C11.3,16.2 12.5,16.2 13.3,15.4C13.7,14.9 13.8,14.3 13.7,13.7Z",
+        "stop" => "M6,6H18V18H6V6Z",
+        "tune" => "M3,17V19H9V17H3M3,5V7H13V5H3M13,21V19H21V17H13V15H11V21H13M7,9V11H3V13H7V15H9V9H7M21,13V11H11V13H21M15,9H17V7H21V5H17V3H15V9Z",
+        "wifi" => "M1,9L3,11C8,6 16,6 21,11L23,9C16.9,3 7.1,3 1,9M9,17L12,20L15,17C13.3,15.7 10.7,15.7 9,17M5,13L7,15C9.8,12.6 14.2,12.6 17,15L19,13C15.1,9.6 8.9,9.6 5,13Z",
+        _ => "M4,4H20V20H4V4M6,6V18H18V6H6Z"
+    };
+}

@@ -1,0 +1,139 @@
+name: release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release tag, for example v2.12.0'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  windows-portable-release:
+    name: Windows portable release
+    runs-on: windows-latest
+
+    env:
+      PROJECT_PATH: src/ARNetDiscovery.Wpf/ARNetDiscovery.Wpf.csproj
+      APP_NAME: ARNetDiscovery
+      PUBLISH_DIR: artifacts/publish/win-x64
+      ARTIFACT_DIR: artifacts/release
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Resolve release version
+        shell: pwsh
+        run: |
+          if ('${{ github.event_name }}' -eq 'push') {
+            $version = '${{ github.ref_name }}'
+          }
+          else {
+            $version = '${{ github.event.inputs.version }}'
+          }
+
+          if (-not ($version -match '^v\d+\.\d+\.\d+([-.][0-9A-Za-z.-]+)?$')) {
+            throw "Release version must look like v2.12.0 or v2.12.0-beta.1. Actual: $version"
+          }
+
+          $semver = $version.TrimStart('v')
+          "RELEASE_VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Append
+          "ASSEMBLY_VERSION=$semver" | Out-File -FilePath $env:GITHUB_ENV -Append
+          "ZIP_NAME=$($env:APP_NAME)-$version-win-x64-portable.zip" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+      - name: Restore
+        run: dotnet restore ARNetDiscovery.sln
+
+      - name: Build
+        run: dotnet build ARNetDiscovery.sln --configuration Release --no-restore
+
+      - name: Publish self-contained Windows portable build
+        shell: pwsh
+        run: |
+          dotnet publish $env:PROJECT_PATH `
+            --configuration Release `
+            --runtime win-x64 `
+            --self-contained true `
+            --output $env:PUBLISH_DIR `
+            /p:Version=$env:ASSEMBLY_VERSION `
+            /p:AssemblyVersion=$env:ASSEMBLY_VERSION `
+            /p:FileVersion=$env:ASSEMBLY_VERSION `
+            /p:PublishSingleFile=true `
+            /p:IncludeNativeLibrariesForSelfExtract=true `
+            /p:IncludeAllContentForSelfExtract=true `
+            /p:EnableCompressionInSingleFile=true `
+            /p:DebugType=None `
+            /p:DebugSymbols=false
+
+      - name: Package portable ZIP and checksum
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path $env:ARTIFACT_DIR | Out-Null
+          $zipPath = Join-Path $env:ARTIFACT_DIR $env:ZIP_NAME
+          Compress-Archive -Path "$env:PUBLISH_DIR/*" -DestinationPath $zipPath -Force
+
+          $hash = Get-FileHash -Algorithm SHA256 $zipPath
+          $checksumPath = "$zipPath.sha256"
+          "$($hash.Hash)  $($env:ZIP_NAME)" | Set-Content -Path $checksumPath -Encoding ASCII
+
+          Get-ChildItem $env:ARTIFACT_DIR | Format-Table Name,Length
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ARNetDiscovery-${{ env.RELEASE_VERSION }}-win-x64-portable
+          path: artifacts/release/*
+          if-no-files-found: error
+
+      - name: Create GitHub Release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $notes = @"
+          ## ARNet Discovery $env:RELEASE_VERSION
+
+          ARNet Discovery is a portable Windows tool for LAN discovery, imported target-list verification, and lightweight protocol evidence checking.
+
+          ### What you can do with this release
+          - Scan the selected laptop adapter with **Scan Local**.
+          - Probe a known IP address or bounded IP range.
+          - Import Excel, CSV, or TXT target lists and verify exact expected devices with **Scan List**.
+          - Review ping, MAC, open-port, protocol, and diagnostic evidence in the device table and inspector.
+          - Export scan results to CSV for FAT, commissioning, or troubleshooting records.
+
+          ### How to run
+          1. Download `$env:ZIP_NAME`.
+          2. Extract the ZIP to a local folder.
+          3. Run `ARNetDiscovery.exe`.
+          4. Select the correct network adapter before scanning.
+
+          ### Included files
+          - Portable self-contained Windows x64 application.
+          - SHA256 checksum file for download verification.
+
+          ### Safety note
+          Use this tool only on networks where you are authorized to test. ARNet Discovery provides evidence to support engineering checks; it does not replace formal commissioning, cyber-security, or protection-system procedures.
+          "@
+
+          gh release create $env:RELEASE_VERSION `
+            "$env:ARTIFACT_DIR/$env:ZIP_NAME" `
+            "$env:ARTIFACT_DIR/$env:ZIP_NAME.sha256" `
+            --title "ARNet Discovery $env:RELEASE_VERSION" `
+            --notes $notes `
+            --target "${{ github.sha }}" `
+            --latest

@@ -1,32 +1,37 @@
-# ARNet Discovery Development Rules
+# ARNet Discovery maintainer guidelines
 
-## Core rules
+These guidelines help keep ARNet Discovery reliable, lightweight, and useful for field engineering work.
 
-- Keep scan logic in `ARNetDiscovery.Core`, never in WPF code-behind.
-- WPF is only presentation and orchestration.
-- All probe exceptions must be routed to diagnostics.
-- Do not let a single bad IP, blocked port, DNS issue, ARP issue, or socket exception crash the app.
-- Prefer immutable scan result records for snapshots.
-- Do not introduce heavy UI libraries unless there is a strong reason.
-- Do not embed third-party OUI databases unless license/redistribution is verified.
+## Product principles
 
-## UI rules
+- Keep the main workflow table-first and evidence-based.
+- Keep the app responsive during scans.
+- Show partial results early; enrich results in the background.
+- Be clear about evidence versus confirmed device identity.
+- Keep the inspector and diagnostics panels secondary and collapsible.
+- Avoid visual noise and oversized dashboard elements.
 
-- No default-looking DataGrid-first UX.
-- Center experience is a visual discovery canvas with compact premium device cards.
-- Right panel is the source of truth for selected device properties.
-- Keep typography calm: no oversized hero text.
-- Use restrained accent colors and clear protocol chips.
-- Preserve the light professional engineering look.
+## Scanner principles
 
-## Performance rules
+- Keep scan logic inside `ARNetDiscovery.Core`.
+- Route expected network failures to diagnostics.
+- Treat ping timeout as evidence, not as a crash condition.
+- Use guarded async concurrency and cancellation.
+- Keep default scan behavior conservative for industrial LANs.
+- Cap broad subnet scans unless the user explicitly chooses a bounded target list/range.
 
-- Avoid serial IP scanning.
-- Use guarded async concurrency.
-- Default settings must be safe for industrial LANs.
-- Large subnet scan must be capped unless user explicitly expands it.
+## UI principles
+
+- WPF is the primary desktop product line.
+- Use premium, clean, lightweight controls.
+- Avoid default-looking Windows controls when they affect product quality.
+- Keep the central device table as the main work area.
+- Keep icons embedded/vector-based so the project does not depend on bundled font files.
 
 ## Repository hygiene
 
 - Keep `bin`, `obj`, `artifacts`, `dist`, and `node_modules` out of Git.
-- Project license is Apache-2.0.
+- Keep documentation user-facing and product-oriented.
+- Keep the project Apache-2.0 friendly.
+- Add tests before making major scanner behavior changes.
+

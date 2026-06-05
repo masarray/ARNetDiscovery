@@ -1,7 +1,6 @@
-# Optional local OUI vendor lookup table.
-# Keep this file lightweight to avoid licensing issues with redistributed third-party OUI databases.
+# Optional local MAC vendor lookup table.
 # Format: prefix,vendor
-# Examples below use documentation-style placeholder prefixes. Replace with your approved internal/company OUI data if needed.
+# You may replace these placeholder rows with vendor prefixes approved for your own project or organization.
 prefix,vendor
 001122,Example Vendor
 AABBCC,Example Industrial Vendor

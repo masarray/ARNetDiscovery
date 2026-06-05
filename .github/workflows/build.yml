@@ -1,0 +1,41 @@
+name: build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows-build:
+    name: Windows build
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore ARNetDiscovery.sln
+
+      - name: Build
+        run: dotnet build ARNetDiscovery.sln --configuration Release --no-restore
+
+      - name: Publish portable win-x64 build
+        run: dotnet publish src/ARNetDiscovery.Wpf/ARNetDiscovery.Wpf.csproj --configuration Release --runtime win-x64 --self-contained true /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true --output artifacts/publish/win-x64
+
+      - name: Upload win-x64 artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ARNetDiscovery-win-x64
+          path: artifacts/publish/win-x64
+          if-no-files-found: error

@@ -56,8 +56,10 @@ public sealed class NetworkAdapterProvider
             }
 
             return adapters
-                .OrderByDescending(a => a.GatewayAddress is not null)
+                .OrderByDescending(AdapterPriority)
+                .ThenByDescending(a => a.GatewayAddress is not null)
                 .ThenByDescending(a => a.SpeedBitsPerSecond)
+                .ThenBy(a => a.Name)
                 .ToArray();
         }
         catch (Exception ex)
@@ -65,5 +67,21 @@ public sealed class NetworkAdapterProvider
             _diagnostics.Publish(DiagnosticEntry.Error(nameof(NetworkAdapterProvider), "Failed to enumerate network adapters.", ex));
             return Array.Empty<NetworkAdapterInfo>();
         }
+    }
+
+    private static int AdapterPriority(NetworkAdapterInfo adapter)
+    {
+        var name = $"{adapter.Name} {adapter.Description} {adapter.InterfaceType}".ToLowerInvariant();
+
+        if (name.Contains("ethernet") || name.Contains("lan") || name.Contains("rj45") || name.Contains("gigabit") || name.Contains("intel(r) ethernet"))
+            return 500;
+
+        if (name.Contains("usb ethernet") || name.Contains("realtek usb gbe") || name.Contains("dock"))
+            return 450;
+
+        if (name.Contains("wi-fi") || name.Contains("wifi") || name.Contains("wireless") || name.Contains("wlan"))
+            return 300;
+
+        return 100;
     }
 }

@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ARNet Discovery - Substation LAN & Relay IP Scanner for Windows</title>
+  <meta name="description" content="ARNet Discovery is a portable Windows LAN scanner for substation automation engineers: discover relay IPs, verify imported target lists, and detect IEC 61850, IEC 104, Modbus TCP, DNP3, OPC UA, HTTP, SSH, and switch/server evidence." />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="author" content="Ari Sulistiono" />
+  <meta name="application-name" content="ARNet Discovery" />
+  <meta name="theme-color" content="#07111f" />
+  <meta name="keywords" content="ARNet Discovery, substation LAN scanner, relay IP scanner, IEC 61850 scanner, IEC 104 scanner, Modbus TCP scanner, DNP3 scanner, OPC UA discovery, FAT testing tool, commissioning tool, industrial automation network discovery, WPF network scanner" />
+  <link rel="canonical" href="https://masarray.github.io/ARNetDiscovery/" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="ARNet Discovery" />
+  <meta property="og:title" content="ARNet Discovery - Substation LAN & Relay IP Scanner" />
+  <meta property="og:description" content="Discover devices on engineering LANs, verify relay/server IP target lists, and detect active industrial protocol evidence from a portable Windows desktop app." />
+  <meta property="og:url" content="https://masarray.github.io/ARNetDiscovery/" />
+  <meta property="og:image" content="https://masarray.github.io/ARNetDiscovery/assets/social-preview.svg" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ARNet Discovery - Substation LAN & Relay IP Scanner" />
+  <meta name="twitter:description" content="Portable Windows tool for substation LAN discovery, target-list verification, and IEC 61850 / IEC 104 / Modbus / DNP3 / OPC UA evidence." />
+  <meta name="twitter:image" content="https://masarray.github.io/ARNetDiscovery/assets/social-preview.svg" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "ARNet Discovery",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Windows",
+    "softwareVersion": "latest",
+    "description": "Portable Windows engineering tool for substation LAN discovery, relay/server target-list verification, and lightweight protocol evidence detection for IEC 61850, IEC 60870-5-104, Modbus TCP, DNP3, OPC UA, HTTP, SSH, and Telnet.",
+    "url": "https://masarray.github.io/ARNetDiscovery/",
+    "downloadUrl": "https://github.com/masarray/ARNetDiscovery/releases/latest",
+    "codeRepository": "https://github.com/masarray/ARNetDiscovery",
+    "license": "https://www.apache.org/licenses/LICENSE-2.0",
+    "programmingLanguage": "C#",
+    "runtimePlatform": ".NET 8",
+    "keywords": [
+      "substation automation",
+      "relay IP scanner",
+      "LAN discovery",
+      "IEC 61850",
+      "IEC 60870-5-104",
+      "Modbus TCP",
+      "DNP3",
+      "OPC UA",
+      "FAT testing",
+      "commissioning"
+    ],
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Person",
+      "name": "Ari Sulistiono",
+      "url": "https://github.com/masarray"
+    }
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg: #f5f8fb;
+      --panel: #ffffff;
+      --ink: #07111f;
+      --muted: #60708a;
+      --line: #dce5ee;
+      --accent: #20bbd7;
+      --accent-soft: #e8f9fd;
+      --green: #08a877;
+      --shadow: 0 22px 60px rgba(17, 48, 74, .12);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #ffffff 0%, var(--bg) 52%, #eef4f8 100%);
+      color: var(--ink);
+    }
+    a { color: inherit; text-decoration: none; }
+    .page { max-width: 1180px; margin: 0 auto; padding: 34px 24px 56px; }
+    .nav { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 72px; }
+    .brand { display: flex; align-items: center; gap: 14px; font-weight: 700; letter-spacing: -.02em; }
+    .logo { width: 38px; height: 38px; border-radius: 12px; background: #07111f; display: grid; place-items: center; color: var(--accent); font-weight: 800; box-shadow: 0 14px 32px rgba(7,17,31,.18); }
+    .navlinks { display: flex; gap: 14px; align-items: center; color: var(--muted); font-size: 13px; flex-wrap: wrap; justify-content: flex-end; }
+    .pill { display: inline-flex; align-items: center; gap: 8px; height: 34px; border: 1px solid var(--line); border-radius: 999px; padding: 0 13px; background: rgba(255,255,255,.78); }
+    .hero { display: grid; grid-template-columns: 1.02fr .98fr; gap: 34px; align-items: center; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; color: #076f84; background: var(--accent-soft); border: 1px solid #c8eef7; border-radius: 999px; padding: 8px 12px; font-size: 12px; font-weight: 650; }
+    h1 { font-size: clamp(34px, 4.4vw, 56px); line-height: .98; letter-spacing: -.055em; margin: 20px 0 18px; font-weight: 650; }
+    h2 { font-size: clamp(24px, 3vw, 36px); line-height: 1.08; letter-spacing: -.04em; margin: 0 0 12px; font-weight: 650; }
+    .lead { color: var(--muted); font-size: 16px; line-height: 1.7; max-width: 620px; margin: 0 0 24px; }
+    .section-lead { color: var(--muted); max-width: 760px; line-height: 1.7; margin: 0 0 22px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 28px 0 22px; }
+    .button { height: 44px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; padding: 0 18px; font-weight: 650; font-size: 13px; border: 1px solid var(--line); background: #fff; box-shadow: 0 14px 30px rgba(17,48,74,.08); }
+    .button.primary { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .badges { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 18px; }
+    .mock { background: rgba(255,255,255,.74); border: 1px solid var(--line); border-radius: 28px; padding: 16px; box-shadow: var(--shadow); }
+    .window { background: #fff; border-radius: 22px; border: 1px solid #dbe4ee; overflow: hidden; }
+    .bar { height: 44px; display: flex; align-items: center; justify-content: space-between; padding: 0 18px; border-bottom: 1px solid #e7edf4; }
+    .dots { display: flex; gap: 7px; }
+    .dot { width: 9px; height: 9px; border-radius: 999px; background: #d7e1ec; }
+    .dot:nth-child(1) { background: #22c1dc; }
+    .dot:nth-child(2) { background: #08a877; }
+    .dot:nth-child(3) { background: #f2b544; }
+    .app { padding: 18px; background: #f6f9fc; }
+    .toolbar { display: grid; grid-template-columns: 1fr 190px; gap: 10px; margin-bottom: 12px; }
+    .input, .select { height: 38px; border-radius: 15px; background: #fff; border: 1px solid #dce5ee; color: #7b8ba3; display: flex; align-items: center; padding: 0 14px; font-size: 12px; }
+    .chips { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+    .chip { height: 28px; border-radius: 999px; background: #fff; border: 1px solid #dce5ee; display: flex; align-items: center; padding: 0 10px; font-size: 11px; color: #60708a; }
+    .table { background: #fff; border: 1px solid #dce5ee; border-radius: 0; overflow: hidden; }
+    .row { display: grid; grid-template-columns: 1.4fr .9fr .8fr 1fr .6fr; gap: 12px; padding: 13px 16px; border-bottom: 1px solid #edf2f7; align-items: center; font-size: 12px; }
+    .row.head { color: #73849b; font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; background: #fbfdff; }
+    .device { display: flex; gap: 10px; align-items: center; min-width: 0; }
+    .icon { width: 32px; height: 32px; border-radius: 11px; background: #f2f7fa; border: 1px solid #e1eaf2; }
+    .name { font-weight: 650; color: #0b1020; }
+    .sub { color: #60708a; font-size: 11px; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .status { justify-self: start; color: #087a59; background: #eafaf5; border: 1px solid #d3f0e7; height: 24px; border-radius: 999px; padding: 0 10px; display: flex; align-items: center; gap: 6px; font-weight: 650; font-size: 11px; }
+    .status:before { content: ""; width: 6px; height: 6px; border-radius: 999px; background: var(--green); }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 34px; }
+    .card { background: rgba(255,255,255,.82); border: 1px solid var(--line); border-radius: 22px; padding: 18px; box-shadow: 0 16px 38px rgba(17,48,74,.07); }
+    .card h3 { margin: 0 0 8px; font-size: 15px; letter-spacing: -.02em; }
+    .card p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .section { margin-top: 58px; }
+    .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 18px; }
+    .step { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 18px; box-shadow: 0 14px 34px rgba(17,48,74,.06); }
+    .step b { display: block; margin-bottom: 8px; }
+    .step span { color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .protocols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 16px; }
+    .protocol { height: 38px; border-radius: 999px; background: #fff; border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; color: #40516a; font-size: 12px; font-weight: 650; }
+    .faq { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 18px; }
+    .faq .card h3 { font-size: 14px; }
+    footer { margin-top: 54px; color: #7b8ba3; font-size: 12px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    @media (max-width: 900px) {
+      .hero, .grid, .steps, .faq { grid-template-columns: 1fr; }
+      .nav { margin-bottom: 42px; }
+      .toolbar, .protocols { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <nav class="nav" aria-label="Primary navigation">
+      <a class="brand" href="https://masarray.github.io/ARNetDiscovery/" aria-label="ARNet Discovery home"><div class="logo">AR</div><span>ARNet Discovery</span></a>
+      <div class="navlinks">
+        <a class="pill" href="https://github.com/masarray/ARNetDiscovery">GitHub</a>
+        <a class="pill" href="USER_GUIDE.md">Guide</a>
+        <a class="pill" href="https://github.com/masarray/ARNetDiscovery/releases/latest">Download</a>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <div>
+        <span class="eyebrow">Progressive evidence scanner for engineering LANs</span>
+        <h1>Substation LAN discovery without the manual ping ritual.</h1>
+        <p class="lead">ARNet Discovery is a portable Windows LAN scanner for substation automation work. Import an engineering target list, scan exact relay/server IPs, and verify active protocol evidence for IEC 61850, IEC 104, Modbus TCP, DNP3, OPC UA, web-managed devices, switches, and workstations.</p>
+        <div class="actions">
+          <a class="button primary" href="https://github.com/masarray/ARNetDiscovery/releases/latest">Download latest release</a>
+          <a class="button" href="USER_GUIDE.md">How to use</a>
+          <a class="button" href="ARCHITECTURE.md">Architecture</a>
+          <a class="button" href="ROADMAP.md">Roadmap</a>
+          <a class="button" href="https://github.com/masarray/ARNetDiscovery">GitHub</a>
+        </div>
+        <div class="badges" aria-label="Project badges">
+          <a href="https://github.com/masarray/ARNetDiscovery/actions/workflows/build.yml"><img alt="Build status" src="https://github.com/masarray/ARNetDiscovery/actions/workflows/build.yml/badge.svg?branch=main"></a>
+          <a href="https://github.com/masarray/ARNetDiscovery/actions/workflows/release.yml"><img alt="Release workflow status" src="https://github.com/masarray/ARNetDiscovery/actions/workflows/release.yml/badge.svg"></a>
+          <a href="https://github.com/masarray/ARNetDiscovery/releases/latest"><img alt="Latest ARNet Discovery release" src="https://img.shields.io/github/v/release/masarray/ARNetDiscovery?label=release"></a>
+          <img alt="Built with .NET 8" src="https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet&logoColor=white">
+          <img alt="Windows WPF desktop application" src="https://img.shields.io/badge/platform-Windows%20WPF-0078D4?logo=windows&logoColor=white">
+          <img alt="Apache 2.0 license" src="https://img.shields.io/badge/license-Apache--2.0-blue.svg">
+        </div>
+      </div>
+
+      <div class="mock" aria-label="ARNet Discovery table-first interface preview">
+        <div class="window">
+          <div class="bar"><div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><span class="pill">Complete</span></div>
+          <div class="app">
+            <div class="toolbar"><div class="input">Search device, vendor, IP, protocol</div><div class="select">EthQ · 1.110.200.234/8</div></div>
+            <div class="chips"><span class="chip">52 devices</span><span class="chip">18 online</span><span class="chip">17 protocol</span></div>
+            <div class="table">
+              <div class="row head"><span>Device</span><span>IP Address</span><span>Expected</span><span>Protocols</span><span>Status</span></div>
+              <div class="row"><div class="device"><span class="icon"></span><div><div class="name">E00PBDF1</div><div class="sub">Busbar Protection Relay</div></div></div><span>1.110.0.111</span><span>Expected</span><span>IEC 61850 / Web UI</span><span class="status">Online</span></div>
+              <div class="row"><div class="device"><span class="icon"></span><div><div class="name">E01BCU1</div><div class="sub">Bay Control Unit</div></div></div><span>1.110.1.1</span><span>Expected</span><span>IEC 61850 / Web UI</span><span class="status">Online</span></div>
+              <div class="row"><div class="device"><span class="icon"></span><div><div class="name">X1SRV1</div><div class="sub">SCADA Server</div></div></div><span>1.110.200.201</span><span>Expected</span><span>OPC UA / Web UI</span><span class="status">Online</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid" aria-label="Core capabilities">
+      <div class="card"><h3>Progressive discovery</h3><p>Reachable hosts appear first. Protocol and management-port evidence update the same rows in the background.</p></div>
+      <div class="card"><h3>Target-list verification</h3><p>Import Excel, CSV, or TXT target lists and compare expected engineering inventory against actual network response.</p></div>
+      <div class="card"><h3>Field-ready output</h3><p>Inspect device evidence, review diagnostics, and export CSV results for FAT, commissioning, and troubleshooting records.</p></div>
+    </section>
+
+    <section class="section" id="how-to-use">
+      <h2>How ARNet Discovery is used in the field</h2>
+      <p class="section-lead">The app is designed for engineers who need quick visibility during panel FAT, commissioning, relay LAN checks, and troubleshooting. Start with a local scan, probe a known IP, or import the official engineering IP list.</p>
+      <div class="steps">
+        <div class="step"><b>1. Select adapter</b><span>Choose the LAN/RJ45 adapter connected to the panel, switch, or engineering network.</span></div>
+        <div class="step"><b>2. Scan or import</b><span>Use Scan Local for nearby devices, Probe for a known IP, or Import Excel for exact project targets.</span></div>
+        <div class="step"><b>3. Read evidence</b><span>Review ping, port, protocol, expected-device metadata, and diagnostics in one table.</span></div>
+        <div class="step"><b>4. Export result</b><span>Export CSV evidence for FAT records, punch-list checks, or follow-up troubleshooting.</span></div>
+      </div>
+    </section>
+
+    <section class="section" id="protocol-evidence">
+      <h2>Protocol evidence supported by default</h2>
+      <p class="section-lead">ARNet Discovery performs lightweight checks and clearly separates evidence from confirmation. A detected port is shown as protocol evidence and can be followed by deeper inspection in later releases.</p>
+      <div class="protocols" aria-label="Supported protocol evidence">
+        <div class="protocol">IEC 61850 MMS</div>
+        <div class="protocol">IEC 60870-5-104</div>
+        <div class="protocol">Modbus TCP</div>
+        <div class="protocol">DNP3 TCP</div>
+        <div class="protocol">OPC UA</div>
+        <div class="protocol">HTTP / HTTPS</div>
+        <div class="protocol">SSH / Telnet</div>
+        <div class="protocol">MAC / Vendor</div>
+      </div>
+    </section>
+
+    <section class="section" id="faq">
+      <h2>Frequently asked questions</h2>
+      <div class="faq">
+        <div class="card"><h3>Is ARNet Discovery a replacement for commissioning procedures?</h3><p>No. It is an engineering visibility tool. Use it to gather device and protocol evidence, then follow the project commissioning, cyber-security, and protection procedures.</p></div>
+        <div class="card"><h3>Can it scan IPs outside my current subnet?</h3><p>Yes, use Probe or Import Excel / Scan List. If routing exists from the laptop, ARNet can check exact target IPs outside the local safe scan window.</p></div>
+        <div class="card"><h3>Why does an expected relay show “No response”?</h3><p>Common causes include VLAN mismatch, no route, cable issue, device power, firewall, wrong IP, or a relay that blocks ICMP and the checked protocol ports.</p></div>
+        <div class="card"><h3>Does ARNet aggressively scan the network?</h3><p>No. The default profile uses bounded targets, short timeouts, and lightweight evidence checks so the UI stays responsive and the scan remains conservative.</p></div>
+      </div>
+    </section>
+
+    <footer>
+      <span>Apache-2.0 · Open engineering tool</span>
+      <span>Built for FAT, commissioning, and substation LAN troubleshooting.</span>
+    </footer>
+  </main>
+</body>
+</html>

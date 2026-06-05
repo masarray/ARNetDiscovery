@@ -18,7 +18,7 @@ namespace ARNetDiscovery.Wpf.ViewModels;
 
 public sealed class MainViewModel : ViewModelBase
 {
-    private const int MaxCanvasDevices = 5000;
+    private const int MaxVisibleRows = 5000;
     private static readonly HashSet<string> IndustrialProtocolKeys = new(StringComparer.OrdinalIgnoreCase)
     {
         "IEC61850", "IEC104", "MODBUS", "DNP3", "OPCUA", "SNMP", "SSH", "TELNET"
@@ -54,11 +54,13 @@ public sealed class MainViewModel : ViewModelBase
     private string _scanAdvice = "Tip: for panel LAN, use the NIC directly connected to relay/gateway/switch. Avoid Wi-Fi/VPN adapters unless that is the real route.";
     private string _scanStateLabel = "Idle";
     private string _scanStateMessage = "No scan running.";
-    private string _canvasLimiterMessage = "Table is ready.";
+    private string _resultBufferMessage = "Table is ready.";
     private string _importedListTitle = "No target list imported";
     private string _importedListSummary = "Import Excel/CSV/TXT to scan exact relay/server IP targets across segments.";
     private DateTime _lastProgressUi = DateTime.MinValue;
     private bool _isDiagnosticsExpanded;
+    private bool _isInspectorExpanded;
+    private bool _isAlwaysOnTop = true;
 
     public MainViewModel()
     {
@@ -87,6 +89,8 @@ public sealed class MainViewModel : ViewModelBase
         ScanImportedTargetsCommand = new AsyncRelayCommand(_ => ScanImportedTargetsAsync(), _ => !IsScanning && HasImportedTargets);
         ClearDiagnosticsCommand = new RelayCommand(_ => ClearDiagnostics());
         ToggleDiagnosticsCommand = new RelayCommand(_ => IsDiagnosticsExpanded = !IsDiagnosticsExpanded);
+        ToggleInspectorCommand = new RelayCommand(_ => IsInspectorExpanded = !IsInspectorExpanded);
+        ToggleAlwaysOnTopCommand = new RelayCommand(_ => IsAlwaysOnTop = !IsAlwaysOnTop);
 
         _diagnostics.EntryPublished += (_, entry) => RunOnUi(() =>
         {
@@ -119,6 +123,8 @@ public sealed class MainViewModel : ViewModelBase
     public ICommand ScanImportedTargetsCommand { get; }
     public ICommand ClearDiagnosticsCommand { get; }
     public ICommand ToggleDiagnosticsCommand { get; }
+    public ICommand ToggleInspectorCommand { get; }
+    public ICommand ToggleAlwaysOnTopCommand { get; }
 
     public NetworkAdapterInfo? SelectedAdapter
     {
@@ -183,6 +189,37 @@ public sealed class MainViewModel : ViewModelBase
 
     public double DiagnosticsPanelHeight => IsDiagnosticsExpanded ? 168 : 38;
     public string DiagnosticsToggleText => IsDiagnosticsExpanded ? "Collapse" : "Expand";
+
+    public bool IsInspectorExpanded
+    {
+        get => _isInspectorExpanded;
+        set
+        {
+            if (SetProperty(ref _isInspectorExpanded, value))
+            {
+                OnPropertyChanged(nameof(InspectorPanelWidth));
+                OnPropertyChanged(nameof(InspectorToggleToolTip));
+            }
+        }
+    }
+
+    public double InspectorPanelWidth => IsInspectorExpanded ? 370 : 56;
+    public string InspectorToggleToolTip => IsInspectorExpanded ? "Collapse inspector" : "Expand inspector";
+
+    public bool IsAlwaysOnTop
+    {
+        get => _isAlwaysOnTop;
+        set
+        {
+            if (SetProperty(ref _isAlwaysOnTop, value))
+            {
+                OnPropertyChanged(nameof(AlwaysOnTopToolTip));
+            }
+        }
+    }
+
+    public string AlwaysOnTopToolTip => IsAlwaysOnTop ? "Always on top is ON" : "Always on top is OFF";
+
 
     public bool IsScanning
     {
@@ -250,7 +287,7 @@ public sealed class MainViewModel : ViewModelBase
             if (SetProperty(ref _filteredDeviceCount, value))
             {
                 OnPropertyChanged(nameof(HiddenDeviceCount));
-                OnPropertyChanged(nameof(HasHiddenCanvasDevices));
+                OnPropertyChanged(nameof(HasHiddenBufferedDevices));
             }
         }
     }
@@ -317,10 +354,10 @@ public sealed class MainViewModel : ViewModelBase
         set => SetProperty(ref _scanStateMessage, value);
     }
 
-    public string CanvasLimiterMessage
+    public string ResultBufferMessage
     {
-        get => _canvasLimiterMessage;
-        set => SetProperty(ref _canvasLimiterMessage, value);
+        get => _resultBufferMessage;
+        set => SetProperty(ref _resultBufferMessage, value);
     }
 
     public double ProgressPercent => TotalHosts <= 0 ? 0 : Math.Clamp((double)CheckedHosts / TotalHosts * 100.0, 0, 100);
@@ -330,7 +367,10 @@ public sealed class MainViewModel : ViewModelBase
     public string AdapterSummary => SelectedAdapter is null ? "No active adapter" : $"{SelectedAdapter.Name} · {SelectedAdapter.Address}/{SelectedAdapter.PrefixLength} · {SelectedAdapter.SpeedLabel}";
     public string ScanRangeLabel => SelectedAdapter is null ? "No scan range" : SubnetCalculator.GetSmartRangeLabel(SelectedAdapter.Address, SelectedAdapter.SubnetMask, _defaultScanSettings);
     public int HiddenDeviceCount => Math.Max(0, FilteredDeviceCount - VisibleDevices.Count);
-    public bool HasHiddenCanvasDevices => HiddenDeviceCount > 0;
+    public bool HasHiddenBufferedDevices => HiddenDeviceCount > 0;
+
+    public int ExpectedTargetCount => Devices.Count(d => d.IsExpectedTarget);
+    public int NoResponseCount => Devices.Count(d => d.Status is DeviceStatus.NoResponse or DeviceStatus.Offline or DeviceStatus.Pending);
 
     public int OnlineCount => Devices.Count(d => d.Status is DeviceStatus.Online or DeviceStatus.PingOnly or DeviceStatus.Slow or DeviceStatus.PortOpenOnly);
     public int RelayCandidateCount => Devices.Count(d => d.Kind is DeviceKind.ProtectionRelay or DeviceKind.BayController);
@@ -861,10 +901,10 @@ public sealed class MainViewModel : ViewModelBase
         VisibleDevices.Clear();
         SelectedDevice = null;
         FilteredDeviceCount = 0;
-        CanvasLimiterMessage = "Table waiting for discovered devices.";
+        ResultBufferMessage = "Table waiting for discovered devices.";
         RefreshCounters();
         OnPropertyChanged(nameof(HasVisibleDevices));
-        OnPropertyChanged(nameof(HasHiddenCanvasDevices));
+        OnPropertyChanged(nameof(HasHiddenBufferedDevices));
     }
 
     private void ReplaceDeviceSnapshot(IReadOnlyList<DiscoveredDeviceSnapshot> snapshot)
@@ -925,9 +965,25 @@ public sealed class MainViewModel : ViewModelBase
             TargetSource = existing.TargetSource,
             SourceRow = existing.SourceRow,
             HostName = !string.IsNullOrWhiteSpace(incoming.HostName) && incoming.HostName != incoming.Ip ? incoming.HostName : existing.ExpectedDeviceName ?? incoming.HostName,
-            Kind = incoming.Kind == DeviceKind.Unknown ? existing.Kind : incoming.Kind,
+            Kind = ShouldPreserveExpectedKind(existing, incoming) ? existing.Kind : incoming.Kind,
             Evidence = string.IsNullOrWhiteSpace(incoming.Evidence) ? existing.Evidence : incoming.Evidence
         };
+    }
+
+
+    private static bool ShouldPreserveExpectedKind(DiscoveredDeviceSnapshot existing, DiscoveredDeviceSnapshot incoming)
+    {
+        if (!existing.IsExpectedTarget)
+            return false;
+
+        var hasStrongProtocolEvidence = incoming.OpenPorts.Any(p => p.Port is 102 or 2404 or 502 or 20000 or 4840)
+            || incoming.ProtocolTags.Any(t => t.Key is "IEC61850" or "IEC104" or "MODBUS" or "DNP3" or "OPCUA");
+
+        if (hasStrongProtocolEvidence)
+            return false;
+
+        return incoming.Status is DeviceStatus.PingOnly or DeviceStatus.Online or DeviceStatus.Slow
+            || incoming.Kind is DeviceKind.ServerOrWorkstation or DeviceKind.WebManagedDevice or DeviceKind.Unknown;
     }
 
     private void RebuildVisibleDevices()
@@ -936,24 +992,62 @@ public sealed class MainViewModel : ViewModelBase
             .Where(MatchesFilter)
             .OrderByDescending(DeviceRenderPriority)
             .ThenBy(d => IpSortKey(d.Ip))
+            .Take(MaxVisibleRows)
             .ToArray();
 
-        FilteredDeviceCount = filtered.Length;
-        VisibleDevices.Clear();
-        foreach (var device in filtered.Take(MaxCanvasDevices))
-            VisibleDevices.Add(device);
+        FilteredDeviceCount = Devices.Count(MatchesFilter);
 
-        CanvasLimiterMessage = HiddenDeviceCount > 0
-            ? $"Table showing {VisibleDevices.Count:n0} device(s). {HiddenDeviceCount:n0} additional result(s) are buffered for export."
+        // Delta-update the visible table instead of Clear/Add every flush.
+        // This keeps WPF virtualization smooth during progressive discovery.
+        var indexByIp = new Dictionary<string, DiscoveredDeviceSnapshot>(StringComparer.Ordinal);
+        foreach (var device in filtered)
+            indexByIp[device.Ip] = device;
+
+        for (var i = VisibleDevices.Count - 1; i >= 0; i--)
+        {
+            if (!indexByIp.ContainsKey(VisibleDevices[i].Ip))
+                VisibleDevices.RemoveAt(i);
+        }
+
+        for (var targetIndex = 0; targetIndex < filtered.Length; targetIndex++)
+        {
+            var device = filtered[targetIndex];
+            var currentIndex = -1;
+            for (var i = 0; i < VisibleDevices.Count; i++)
+            {
+                if (VisibleDevices[i].Ip == device.Ip)
+                {
+                    currentIndex = i;
+                    break;
+                }
+            }
+
+            if (currentIndex < 0)
+            {
+                var insertIndex = Math.Min(targetIndex, VisibleDevices.Count);
+                VisibleDevices.Insert(insertIndex, device);
+            }
+            else
+            {
+                if (!ReferenceEquals(VisibleDevices[currentIndex], device) && !VisibleDevices[currentIndex].Equals(device))
+                    VisibleDevices[currentIndex] = device;
+
+                if (currentIndex != targetIndex && targetIndex < VisibleDevices.Count)
+                    VisibleDevices.Move(currentIndex, targetIndex);
+            }
+        }
+
+        ResultBufferMessage = HiddenDeviceCount > 0
+            ? $"Showing {VisibleDevices.Count:n0}; {HiddenDeviceCount:n0} buffered for export."
             : VisibleDevices.Count > 0
-                ? $"Table showing all {VisibleDevices.Count:n0} filtered device(s)."
+                ? $"Showing all {VisibleDevices.Count:n0} filtered device(s)."
                 : "No visible device matches the current filter.";
 
         OnPropertyChanged(nameof(HasDevices));
         OnPropertyChanged(nameof(HasVisibleDevices));
         OnPropertyChanged(nameof(HiddenDeviceCount));
-        OnPropertyChanged(nameof(HasHiddenCanvasDevices));
-        OnPropertyChanged(nameof(CanvasLimiterMessage));
+        OnPropertyChanged(nameof(HasHiddenBufferedDevices));
+        OnPropertyChanged(nameof(ResultBufferMessage));
     }
 
     private void SelectDevice(DiscoveredDeviceSnapshot? device)
@@ -1123,10 +1217,12 @@ public sealed class MainViewModel : ViewModelBase
         OnPropertyChanged(nameof(SwitchCount));
         OnPropertyChanged(nameof(IndustrialCandidateCount));
         OnPropertyChanged(nameof(LowConfidenceHostCount));
+        OnPropertyChanged(nameof(ExpectedTargetCount));
+        OnPropertyChanged(nameof(NoResponseCount));
         OnPropertyChanged(nameof(HasDevices));
         OnPropertyChanged(nameof(HasVisibleDevices));
         OnPropertyChanged(nameof(HiddenDeviceCount));
-        OnPropertyChanged(nameof(HasHiddenCanvasDevices));
+        OnPropertyChanged(nameof(HasHiddenBufferedDevices));
         RaiseCommandStates();
     }
 

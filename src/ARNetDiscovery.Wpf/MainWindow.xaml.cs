@@ -12,7 +12,6 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        DataContext = new MainViewModel();
     }
 
     private void TopChrome_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -60,6 +59,43 @@ public partial class MainWindow : Window
 
     private void CloseButton_Click(object sender, RoutedEventArgs e)
         => Close();
+
+
+    private void DiagnosticsPanel_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        if (IsInteractiveElement(e.OriginalSource as DependencyObject))
+            return;
+
+        if (DataContext is MainViewModel vm && vm.ToggleDiagnosticsCommand.CanExecute(null))
+        {
+            vm.ToggleDiagnosticsCommand.Execute(null);
+            e.Handled = true;
+        }
+    }
+
+    private void InspectorPanel_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        if (IsInteractiveElement(e.OriginalSource as DependencyObject))
+            return;
+
+        if (DataContext is MainViewModel { IsInspectorExpanded: false } vm && vm.ToggleInspectorCommand.CanExecute(null))
+        {
+            vm.ToggleInspectorCommand.Execute(null);
+            e.Handled = true;
+        }
+    }
+
+    private void InspectorHeader_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        if (IsInteractiveElement(e.OriginalSource as DependencyObject))
+            return;
+
+        if (DataContext is MainViewModel vm && vm.ToggleInspectorCommand.CanExecute(null))
+        {
+            vm.ToggleInspectorCommand.Execute(null);
+            e.Handled = true;
+        }
+    }
 
     private void ToggleMaximizeRestore()
         => WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
