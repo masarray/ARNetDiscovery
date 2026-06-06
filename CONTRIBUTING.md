@@ -57,7 +57,7 @@ For scanner changes, include safe timeout/cancellation behavior and route except
 When changing user-visible behavior, update the relevant documentation:
 
 - `README.md`
-- `docs/USER_GUIDE.md`
+- `docs/USER_MANUAL.md`
 - `docs/ARCHITECTURE.md`
 - `docs/ROADMAP.md`
 

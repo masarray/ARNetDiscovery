@@ -1,286 +1,180 @@
-# ARNet Discovery
+# ARNet Discovery - Windows Substation LAN Scanner for Relay IP & Protocol Evidence
 
 <p align="left">
-  <a href="https://github.com/masarray/ARNetDiscovery/actions/workflows/build.yml"><img alt="Build" src="https://github.com/masarray/ARNetDiscovery/actions/workflows/build.yml/badge.svg?branch=main"></a>
-  <a href="https://github.com/masarray/ARNetDiscovery/actions/workflows/release.yml"><img alt="Release" src="https://github.com/masarray/ARNetDiscovery/actions/workflows/release.yml/badge.svg"></a>
+  <a href="https://github.com/masarray/ARNetDiscovery/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/masarray/ARNetDiscovery/actions/workflows/ci.yml/badge.svg?branch=main"></a>
+  <a href="https://github.com/masarray/ARNetDiscovery/actions/workflows/release-package.yml"><img alt="Windows portable release" src="https://github.com/masarray/ARNetDiscovery/actions/workflows/release-package.yml/badge.svg"></a>
+  <a href="https://github.com/masarray/ARNetDiscovery/actions/workflows/pages.yml"><img alt="GitHub Pages" src="https://github.com/masarray/ARNetDiscovery/actions/workflows/pages.yml/badge.svg?branch=main"></a>
   <a href="https://github.com/masarray/ARNetDiscovery/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/masarray/ARNetDiscovery?label=release"></a>
-  <img alt=".NET" src="https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet&logoColor=white">
-  <img alt="Platform" src="https://img.shields.io/badge/platform-Windows%20WPF-0078D4?logo=windows&logoColor=white">
-  <img alt="License" src="https://img.shields.io/badge/license-Apache--2.0-blue.svg">
+  <img alt="Windows" src="https://img.shields.io/badge/platform-Windows-0078D4?logo=windows&logoColor=white">
+  <img alt=".NET 8" src="https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet&logoColor=white">
+  <img alt="Apache 2.0" src="https://img.shields.io/badge/license-Apache--2.0-blue.svg">
 </p>
 
-**ARNet Discovery** is a portable Windows LAN discovery and relay IP scanner for substation automation work. It helps engineers discover devices on engineering LANs, verify imported target lists, and identify active protocol evidence from protection relays, bay controllers, IEDs, Ethernet switches, gateways, SCADA servers, WinCC workstations, PLCs, meters, printers, and web-managed devices.
+**ARNet Discovery** is a free, open-source Windows desktop app for substation LAN discovery, relay IP scanning, imported target-list verification, and lightweight protocol evidence checks. It helps engineers quickly see which IEDs, protection relays, bay controllers, gateways, switches, SCADA servers, workstations, meters, printers, and web-managed devices are visible from a laptop during FAT, SAT, commissioning, lab validation, and troubleshooting.
 
-The goal is simple: instead of manually pinging relay IP addresses one by one, you can scan a network adapter or an engineering IP list and see which devices respond, what protocol evidence is visible, and which targets need follow-up during FAT, commissioning, and troubleshooting.
+The release package is portable: download the ZIP, extract it, and run `ARNetDiscovery.exe`. No installer, subscription, license key, or Visual Studio installation is required.
 
-ARNet Discovery is licensed under **Apache-2.0**.
+<p align="center">
+  <a href="https://masarray.github.io/ARNetDiscovery/">
+    <img src="docs/assets/arnet-discovery-main.png" alt="ARNet Discovery Windows app showing a device discovery table, protocol evidence, diagnostics, and inspector panels" width="920">
+  </a>
+</p>
 
-Common search terms for this project include **substation LAN scanner**, **relay IP scanner**, **IEC 61850 scanner**, **IEC 104 network discovery**, **Modbus TCP scanner**, **OPC UA discovery**, **industrial automation LAN discovery**, **FAT testing tool**, and **commissioning network checker**.
+## What is this?
 
----
+ARNet Discovery is a practical network visibility tool for engineering work on substation automation and industrial control networks. It provides a table-first workflow for checking reachability, expected IP addresses, open management ports, and common protocol evidence without turning the job into a manual ping spreadsheet.
 
-## What ARNet Discovery does
+## Who is it for?
 
-ARNet Discovery helps during FAT, commissioning, troubleshooting, and substation LAN checks.
+- Protection, automation, SCADA, and commissioning engineers.
+- FAT/SAT teams checking panel LANs and project IP lists.
+- System integrators validating relay, gateway, server, and workstation visibility.
+- Troubleshooting teams who need a clear snapshot before deeper protocol or cyber-security testing.
 
-It can:
+## Why use it?
 
-- scan the selected laptop network adapter using a safe local scan window;
-- probe a single IP address or a custom IP range;
-- import an Excel, CSV, or TXT target list and scan only the expected device IPs;
-- show reachable devices immediately while protocol checks continue in the background;
-- display ping, MAC, open ports, protocol candidates, and diagnostics in one clean table;
-- compare expected engineering devices against actual network response;
-- export scan results to CSV for documentation or punch-list follow-up;
-- create portable Windows builds through GitHub Actions releases.
+- Verify an official Excel/CSV/TXT target list instead of scanning unnecessary addresses.
+- See expected devices first, then watch evidence update progressively.
+- Keep ping, MAC, vendor, open ports, protocol candidates, diagnostics, and selected-device details in one screen.
+- Export CSV results for FAT records, commissioning notes, punch-list follow-up, or troubleshooting handover.
+- Use conservative scan behavior that avoids accidentally scanning huge address spaces from broad subnet masks.
 
----
+## Key features
 
-## Typical use cases
+- **Scan Local** - discover nearby devices from the selected adapter with a safe scan window.
+- **Probe** - test a single IP address, CIDR block, or bounded IP range.
+- **Import Excel / CSV / TXT** - load a project target list and scan the exact expected IP addresses.
+- **Progressive discovery** - devices appear quickly while background evidence checks continue.
+- **Protocol evidence** - check common evidence for IEC 61850 MMS, IEC 60870-5-104, Modbus TCP, DNP3 TCP, OPC UA, HTTP/HTTPS, SSH, and Telnet.
+- **Device classification** - identify likely relays/IEDs, BCUs, gateways/RTUs, switches, servers/workstations, meters/PLCs, printers, and web-managed devices from available evidence.
+- **Collapsible inspector** - review selected-device details without losing the main table.
+- **Diagnostics drawer** - keep scan messages, timeouts, and warnings visible when needed.
+- **CSV export** - save results for engineering records and follow-up.
+- **Portable Windows release** - ready-to-run ZIP package built by GitHub Actions.
 
-### 1. Quick LAN discovery
+## Screenshots
 
-Use **Scan Local** when your laptop is connected to a relay, panel, or switch LAN and you want to see what is visible from the selected adapter.
+![ARNet Discovery main app view](docs/assets/arnet-discovery-main.png)
 
-ARNet checks the selected adapter, excludes the laptop's own IP address, scans a safe local window, and shows discovered devices progressively.
+## Download / Install / Run
 
-### 2. Direct IP probe
-
-Use **Probe** when you already know the target IP address.
-
-Examples:
-
-```text
-1.110.5.1
-192.168.1.10
-10.10.10.21
-```
-
-This is useful when a device is reachable through routing but is outside the current local scan window.
-
-### 3. Target list verification
-
-Use **Import Excel** when you have an engineering IP list from a project document.
-
-Supported formats:
+Download the latest package from [GitHub Releases](https://github.com/masarray/ARNetDiscovery/releases/latest):
 
 ```text
-.xlsx   Excel workbook
-.csv    comma-separated table
-.txt    plain text IP list
+ARNetDiscovery-v<version>-win-x64-portable.zip
+SHA256SUMS.txt
 ```
 
-For Excel sheets, ARNet detects common engineering columns such as:
+Run the app:
 
-```text
-NO, NAMA BAY, JENIS BAY, PANEL, JENIS PERALATAN,
-NO DEVICE, NAMA IED, IP ADDRESS, REMARK
-```
+1. Extract the ZIP to a local folder.
+2. Run `ARNetDiscovery.exe`.
+3. Select the Ethernet adapter connected to the engineering LAN.
+4. Use **Scan Local**, **Probe**, or **Import Excel** + **Scan List**.
+5. Review the results and export CSV when needed.
 
-After import, every expected target appears in the table first. Then **Scan List** checks each exact IP and updates the row with ping, port, protocol, and diagnostic evidence.
+The package includes quick-start and user-manual PDFs, license files, notices, and checksum information.
 
-This avoids noisy subnet sweeps and makes the tool useful as an inventory verifier.
+## Quick start
 
----
+1. Connect the laptop to the panel LAN, relay switch, test bench, or engineering network.
+2. Open ARNet Discovery.
+3. Select the correct Ethernet adapter.
+4. Choose the scan mode:
+   - **Scan Local** for nearby devices.
+   - **Probe** for a known IP, CIDR block, or bounded range.
+   - **Import Excel** + **Scan List** for official project target verification.
+5. Select a row to review evidence in the inspector.
+6. Open diagnostics when you need scan messages or timeout notes.
+7. Export CSV for FAT, SAT, commissioning, or troubleshooting records.
 
-## Protocol evidence
+## How it works
 
-ARNet Discovery uses lightweight evidence checks during normal scanning. It is designed to be responsive and conservative on industrial networks.
+ARNet Discovery performs conservative reachability and evidence checks. A detected open port is shown as engineering evidence, not as a final identity guarantee.
 
-Default protocol evidence includes:
-
-| Evidence | Default port | Typical device meaning |
+| Evidence | Default port | Typical interpretation |
 |---|---:|---|
-| IEC 61850 MMS / ISO-on-TCP | 102 | protection relay, BCU, IED, gateway |
-| IEC 60870-5-104 | 2404 | RTU, gateway, automation controller |
-| Modbus TCP | 502 | PLC, meter, gateway, controller |
-| DNP3 TCP | 20000 | outstation, RTU, gateway |
-| OPC UA | 4840 | SCADA, WinCC workstation/server, OPC server |
-| HTTP / HTTPS | 80 / 443 | web-managed device, server, switch, relay web UI |
-| SSH / Telnet | 22 / 23 | switch, router, gateway, server management |
+| IEC 61850 MMS / ISO-on-TCP | 102 | protection relay, BCU, IED, or gateway candidate |
+| IEC 60870-5-104 | 2404 | RTU, gateway, automation controller candidate |
+| Modbus TCP | 502 | PLC, meter, gateway, or controller candidate |
+| DNP3 TCP | 20000 | outstation, RTU, or gateway candidate |
+| OPC UA | 4840 | SCADA, server, workstation, or OPC server candidate |
+| HTTP / HTTPS | 80 / 443 | web-managed device, switch, server, or relay web UI candidate |
+| SSH / Telnet | 22 / 23 | switch, router, gateway, or server management candidate |
 
-A port result is treated as evidence, not as a final device guarantee. For example, `Port 102 open` means the device is an IEC 61850 candidate and should be verified further if needed.
-
----
-
-## Reading the results
-
-ARNet separates reachability and protocol evidence so the result is easier to trust.
-
-| Status | Meaning |
-|---|---|
-| Online | Device replied to quick ping and/or strong evidence was found |
-| Ping only | Device replied to ping but no known industrial protocol port was detected |
-| Port open | Device did not reply to ping, but one or more checked ports responded |
-| No response | Expected target did not respond to quick ping or default protocol checks |
-| Expected | Target came from an imported engineering list |
-
-Useful interpretation examples:
-
-```text
-Ping OK + IEC 61850 evidence
--> target is reachable and likely has an IEC 61850 service active.
-
-No ping + Port 102 open
--> ICMP may be blocked, but IEC 61850 evidence is visible.
-
-Ping OK + no protocol detected
--> host is reachable, but default industrial protocol evidence was not found.
-
-Expected + No response
--> check VLAN, route, cable, panel power, wrong IP, firewall, or device setting.
-```
-
----
-
-## Download and run
-
-The easiest way to use ARNet Discovery is to download the latest portable Windows release:
-
-```text
-https://github.com/masarray/ARNetDiscovery/releases/latest
-```
-
-Then:
-
-1. download the `ARNetDiscovery-*-win-x64-portable.zip` file;
-2. extract the ZIP;
-3. run `ARNetDiscovery.exe`;
-4. select the correct network adapter;
-5. use **Scan Local**, **Probe**, or **Import Excel** + **Scan List**.
-
-No installer is required for the portable build.
-
----
+Use the result as a fast field snapshot, then follow the formal project procedure for final protocol, protection, and cyber-security validation.
 
 ## Build from source
 
 ### Requirements
 
 - Windows
-- Visual Studio 2026 or compatible Visual Studio version
-- .NET Desktop Development workload
+- Visual Studio with the **.NET desktop development** workload
 - .NET 8 SDK
 
 ### Build in Visual Studio
 
 1. Open `ARNetDiscovery.sln`.
-2. Set `ARNetDiscovery.Wpf` as startup project.
+2. Set `ARNetDiscovery.Wpf` as the startup project.
 3. Build and run.
 
-### Publish portable build locally
+### Build portable package with PowerShell
 
-From the repository root:
-
-```bat
-tools\publish-win-x64.bat
+```powershell
+PowerShell -ExecutionPolicy Bypass -File .\scripts\publish-windows-portable.ps1 -Version v2.16.0
 ```
 
-Or manually:
-
-```bat
-dotnet publish src\ARNetDiscovery.Wpf\ARNetDiscovery.Wpf.csproj -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true
-```
-
-Output path:
+The package is created in:
 
 ```text
-artifacts\publish\win-x64
+artifacts/release/ARNetDiscovery-v2.16.0-win-x64-portable.zip
+artifacts/release/SHA256SUMS.txt
 ```
 
----
+Verify the package:
 
-## GitHub Actions release build
-
-This repository includes CI and release workflows:
-
-```text
-.github/workflows/build.yml     build and publish CI artifact
-.github/workflows/release.yml   create portable Windows GitHub Release from a tag
+```powershell
+PowerShell -ExecutionPolicy Bypass -File .\scripts\verify-release-package.ps1 `
+  -ZipPath .\artifacts\release\ARNetDiscovery-v2.16.0-win-x64-portable.zip `
+  -ChecksumPath .\artifacts\release\SHA256SUMS.txt
 ```
-
-To create a public portable release:
-
-```bat
-git tag v2.12.0
-git push origin v2.12.0
-```
-
-The release workflow creates:
-
-```text
-ARNetDiscovery-v2.12.0-win-x64-portable.zip
-ARNetDiscovery-v2.12.0-win-x64-portable.zip.sha256
-```
-
----
-
-## Optional MAC vendor lookup
-
-ARNet can read a small local vendor lookup CSV. This is optional.
-
-Place a file here:
-
-```text
-src\ARNetDiscovery.Wpf\Data\oui-custom.csv
-```
-
-Format:
-
-```csv
-prefix,vendor
-001122,Example Vendor
-AABBCC,Another Vendor
-```
-
-Accepted prefix formats:
-
-```text
-00:11:22
-00-11-22
-001122
-```
-
-If no vendor file is provided, ARNet still works; the vendor column may simply remain blank or unresolved.
-
----
-
-## Safety and responsible use
-
-Use ARNet Discovery only on networks where you have permission to test. The default scan profile is intentionally conservative for engineering LANs:
-
-- local scan is capped for broad subnet masks;
-- host discovery runs with short timeouts;
-- protocol checks are lightweight by default;
-- diagnostics are shown in the app instead of crashing the UI.
-
-ARNet is a discovery and verification aid. It does not replace project network drawings, relay settings, cyber-security requirements, or formal commissioning procedures.
-
----
 
 ## Documentation
 
-- [Product landing page](https://masarray.github.io/ARNetDiscovery/)
-- [Architecture](docs/ARCHITECTURE.md)
-- [User guide](docs/USER_GUIDE.md)
-- [Product roadmap](docs/ROADMAP.md)
-- [GitHub discovery metadata](docs/GITHUB_SEO.md)
+- [Product page](https://masarray.github.io/ARNetDiscovery/)
+- [Quick Start](docs/QUICK_START.md)
+- [User Manual](docs/USER_MANUAL.md)
+- [Troubleshooting](docs/TROUBLESHOOTING.md)
+- [Release Packaging](docs/RELEASE_PACKAGING.md)
+- [GitHub Pages Deployment](docs/DEPLOYMENT.md)
+- [Validation Matrix](docs/VALIDATION_MATRIX.md)
+- [Roadmap](docs/ROADMAP.md)
 - [Contributing](CONTRIBUTING.md)
-- [Changelog](CHANGELOG.md)
+- [Security](SECURITY.md)
 
----
+## Roadmap
+
+Planned improvements focus on better evidence quality, clearer reports, and safer engineering workflows:
+
+- richer protocol validators for IEC 61850, OPC UA, Modbus TCP, and HTTP metadata;
+- saved scan sessions for repeat FAT and commissioning checks;
+- formatted evidence reports;
+- stronger imported target-list mapping and preview;
+- automated tests for subnet parsing, target import, device classification, and snapshot buffering;
+- accessibility and keyboard-navigation improvements.
+
+See [Roadmap](docs/ROADMAP.md) for details.
 
 ## Contributing
 
-Contributions are welcome when they improve reliability, evidence quality, performance, documentation, or usability.
+Contributions are welcome when they improve reliability, evidence quality, performance, documentation, packaging, or usability.
 
-Good contribution areas:
+Good contribution areas include safer protocol evidence validators, target-list import improvements, export/reporting, UI accessibility, deterministic tests, and documentation examples from realistic lab or commissioning workflows.
 
-- safer protocol evidence validators;
-- target-list import improvements;
-- scan result export/reporting;
-- UI accessibility and keyboard navigation;
-- deterministic tests for subnet parsing, importer logic, and classification;
-- documentation examples from realistic lab/commissioning workflows.
+Please keep the app lightweight, conservative on industrial networks, and clear about what is evidence versus confirmed protocol behavior. See [Contributing](CONTRIBUTING.md).
 
-Please keep the app lightweight, conservative on industrial networks, and clear about what is evidence versus confirmed protocol behavior.
+## License
+
+ARNet Discovery is free and open source under the [Apache License 2.0](LICENSE).
+
+You can use, study, modify, and redistribute the project under the terms of the license. See [NOTICE](NOTICE) and [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES.md) for distribution notes.

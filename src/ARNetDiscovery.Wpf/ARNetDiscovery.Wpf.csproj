@@ -5,11 +5,15 @@
     <UseWPF>true</UseWPF>
     <AssemblyName>ARNetDiscovery</AssemblyName>
     <RootNamespace>ARNetDiscovery.Wpf</RootNamespace>
+    <ApplicationIcon>Resources\app-icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\ARNetDiscovery.Core\ARNetDiscovery.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\oui-custom.csv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\app-icon.ico" />
   </ItemGroup>
 </Project>

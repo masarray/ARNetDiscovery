@@ -1,0 +1,1 @@
+{"name":"ARNet Discovery","short_name":"ARNet","description":"Windows substation LAN scanner and relay IP discovery tool.","start_url":"/ARNetDiscovery/","display":"standalone","background_color":"#f5f8fb","theme_color":"#07111f","icons":[{"src":"assets/app-icon-192.png","sizes":"192x192","type":"image/png"},{"src":"assets/app-icon-512.png","sizes":"512x512","type":"image/png"}]}

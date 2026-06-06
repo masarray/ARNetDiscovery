@@ -7,25 +7,62 @@ TestResults/
 .vscode/
 .idea/
 
-# User/local files
+# User/local IDE files
 *.user
 *.suo
 *.rsuser
 *.userosscache
 *.sln.docstates
 
-# Logs and diagnostics
+# Local secrets and machine-specific settings
+secrets.json
+appsettings.Development.json
+*.pfx
+*.snk
+.env
+.env.*
+
+# Logs, diagnostics, and temp files
 *.log
 logs/
+temp/
+tmp/
+*.tmp
+*.bak
+*.cache
 
-# Publish output
+# Publish/package output
 publish/
 *.nupkg
+*.zip
+*.sha256
+SHA256SUMS.txt
+
+# Large local captures and test dumps
+captures/
+capture/
+*.pcap
+*.pcapng
+*.etl
+
+# Web build output if a web/PWA front end is added later
+node_modules/
+dist/
+build/
 
 # OS files
 .DS_Store
 Thumbs.db
 
-# Large/generated packages
-node_modules/
-dist/
+# Keep official product PDFs tracked
+!docs/QUICK_START.pdf
+!docs/USER_MANUAL.pdf
+
+# Keep public repository assets tracked
+!README.md
+!LICENSE
+!NOTICE
+!THIRD_PARTY_NOTICES.md
+!docs/**
+!scripts/**
+!.github/workflows/**

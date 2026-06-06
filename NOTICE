@@ -5,5 +5,4 @@ ARNet Discovery is distributed under the Apache License 2.0.
 
 Optional MAC vendor lookup data can be supplied by the user through a local CSV file. The application works without this file.
 
-Icon note:
-ARNet uses lightweight embedded vector geometries for UI affordances. No icon font files are redistributed in this repository or binary package.
+ARNet Discovery uses embedded vector geometries for UI icons. No icon font files are redistributed in this repository or portable package.

@@ -1,106 +1,41 @@
-# ARNet Discovery product roadmap
+# Roadmap
 
-This roadmap describes planned improvements for ARNet Discovery as a public engineering tool. The priority is reliability, clear evidence, lightweight operation, and field usability.
+ARNet Discovery is developed as a practical Windows engineering tool for substation LAN visibility, target-list verification, and protocol evidence collection.
 
----
+## Current focus
 
-## Current product baseline
+- Keep the table-first UX fast and readable.
+- Keep scans conservative for engineering networks.
+- Improve evidence quality without making the app heavy.
+- Keep release packages easy to download and run.
 
-ARNet Discovery currently provides:
+## Planned improvements
 
-- Windows WPF desktop application;
-- local LAN discovery;
-- direct IP/range probing;
-- Excel/CSV/TXT target-list scan;
-- progressive result updates;
-- collapsible device inspector;
-- collapsible diagnostics panel;
-- CSV export;
-- portable Windows release build through GitHub Actions.
+### Protocol evidence
 
----
+- IEC 61850 COTP/MMS handshake evidence beyond basic port visibility.
+- OPC UA HEL/ACK evidence.
+- Optional Modbus device-identification request.
+- HTTP/HTTPS title and header summary.
+- Clearer distinction between open-port evidence and confirmed protocol behavior.
 
-## Near-term improvements
+### Target-list workflow
 
-### 1. More protocol evidence validators
+- Column preview before import.
+- Better duplicate-IP handling.
+- Target-list profile save/load.
+- Session export with expected-versus-actual summary.
 
-The default scan remains lightweight, but selected-device inspection can become deeper.
+### Reporting
 
-Planned evidence improvements:
+- HTML evidence report.
+- PDF evidence report.
+- Summary counts for expected, online, ping-only, port-open, and no-response rows.
+- Release-ready report template for FAT and commissioning attachments.
 
-| Protocol | Planned improvement |
-|---|---|
-| IEC 61850 | safer ISO-on-TCP/COTP evidence check |
-| OPC UA | HEL/ACK endpoint confirmation |
-| Modbus TCP | optional safe device identification |
-| HTTP/HTTPS | title/header collection with timeout |
-| IEC 104 | conservative optional validation flow |
+### Quality and maintainability
 
-These checks should be explicit, timeout guarded, and safe for engineering networks.
-
-### 2. Project profile files
-
-Planned `.arnetprofile.json` support:
-
-```text
-project name
-imported target list
-selected scan profile
-custom protocol ports
-last scan result snapshot
-operator notes
-```
-
-This will allow users to reopen a project and repeat a known target-list scan later.
-
-### 3. Evidence reports
-
-CSV is useful, but commissioning teams often need a clearer report.
-
-Planned report outputs:
-
-- HTML evidence report;
-- expected vs actual summary;
-- no-response list grouped by bay/panel/subnet;
-- protocol evidence summary;
-- later PDF export after the evidence model is stable.
-
-### 4. Core tests
-
-The first automated tests should cover deterministic logic:
-
-```text
-subnet/range parsing
-target-list import
-expected-vs-actual classification
-own IP exclusion
-protocol evidence classification
-snapshot update behavior
-```
-
----
-
-## Contribution priorities
-
-The most useful contributions are:
-
-1. safer protocol evidence checks;
-2. better target-list import mapping;
-3. field-friendly reporting;
-4. performance improvements for large target lists;
-5. documentation with realistic commissioning examples;
-6. tests for scanner and importer logic.
-
----
-
-## Product principles
-
-ARNet Discovery should remain:
-
-- lightweight;
-- responsive during scans;
-- clear about evidence vs confirmation;
-- conservative on industrial networks;
-- easy to run as a portable Windows application;
-- useful without requiring a database or server.
-
+- Tests for subnet parsing, target import, device classification, and snapshot buffering.
+- Smaller view models and clearer UI resource structure.
+- Better accessibility and keyboard navigation.
+- More deterministic diagnostics for network exceptions and timeouts.

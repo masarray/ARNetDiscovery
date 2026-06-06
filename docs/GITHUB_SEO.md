@@ -1,11 +1,8 @@
 # GitHub discovery metadata
 
-This file describes the public repository metadata recommended for ARNet Discovery.
-It is intended for maintainers who publish the repository and want the project to be easier to find on GitHub, GitHub Topics, and search engines.
+This file provides recommended public repository metadata for ARNet Discovery.
 
 ## Repository description
-
-Use this as the GitHub repository description:
 
 ```text
 Portable Windows LAN discovery and relay IP scanner for substation automation, FAT, commissioning, and protocol evidence checks.
@@ -13,17 +10,11 @@ Portable Windows LAN discovery and relay IP scanner for substation automation, F
 
 ## Repository website
 
-Use this as the GitHub repository website URL:
-
 ```text
 https://masarray.github.io/ARNetDiscovery/
 ```
 
 ## Recommended GitHub topics
-
-GitHub allows repository topics to help people find and contribute to projects. Use lowercase topic names with hyphens.
-
-Recommended topics:
 
 ```text
 substation-automation
@@ -46,47 +37,42 @@ protection-relay
 engineering-tools
 ```
 
-## Optional GitHub CLI setup
+## Apply with GitHub CLI
 
-From the repository root, after authenticating with GitHub CLI:
+Preview first:
 
 ```powershell
-gh repo edit masarray/ARNetDiscovery `
-  --description "Portable Windows LAN discovery and relay IP scanner for substation automation, FAT, commissioning, and protocol evidence checks." `
-  --homepage "https://masarray.github.io/ARNetDiscovery/" `
-  --add-topic substation-automation `
-  --add-topic network-discovery `
-  --add-topic lan-scanner `
-  --add-topic relay-testing `
-  --add-topic iec61850 `
-  --add-topic iec60870-5-104 `
-  --add-topic modbus-tcp `
-  --add-topic dnp3 `
-  --add-topic opcua `
-  --add-topic scada `
-  --add-topic industrial-automation `
-  --add-topic wpf `
-  --add-topic dotnet `
-  --add-topic windows `
-  --add-topic fat-testing `
-  --add-topic commissioning `
-  --add-topic protection-relay `
-  --add-topic engineering-tools
+PowerShell -ExecutionPolicy Bypass -File .\tools\setup-github-seo.ps1 -WhatIf
 ```
 
-If a topic already exists, GitHub CLI may report that no change was needed.
+Apply:
 
-## Landing page SEO checklist
+```powershell
+PowerShell -ExecutionPolicy Bypass -File .\tools\setup-github-seo.ps1
+```
+
+The script supports:
+
+```text
+Owner
+Repo
+HomepageUrl
+Description
+Topics
+WhatIf
+```
+
+It validates that GitHub CLI is installed and authenticated before applying changes.
+
+## Landing page SEO
 
 The GitHub Pages landing page in `docs/index.html` includes:
 
-- descriptive page title;
-- meta description;
+- descriptive title and meta description;
 - canonical URL;
 - Open Graph metadata;
-- Twitter card metadata;
-- structured data using `SoftwareApplication` JSON-LD;
-- human-readable sections for use cases, supported protocol evidence, and FAQ;
-- `robots.txt` and `sitemap.xml` under `docs/`.
-
-Keep the landing page user-facing. Do not write internal implementation notes, private roadmap assumptions, or maintainer-only commentary on the public landing page.
+- Twitter Card metadata;
+- `SoftwareApplication` structured data;
+- FAQ structured data;
+- human-readable sections for benefits, use cases, workflow, protocol evidence, FAQ, license, and downloads;
+- `robots.txt`, `sitemap.xml`, `.nojekyll`, and `site.webmanifest`.

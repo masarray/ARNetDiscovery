@@ -1,0 +1,82 @@
+name: ci
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows-ci:
+    name: Windows build and package check
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore ARNetDiscovery.sln
+
+      - name: Build
+        run: dotnet build ARNetDiscovery.sln --configuration Release --no-restore
+
+      - name: Run tests when test projects exist
+        shell: pwsh
+        run: |
+          $testProjects = Get-ChildItem -Path . -Recurse -Filter '*Tests.csproj' | Select-Object -ExpandProperty FullName
+          if ($testProjects.Count -eq 0) {
+            Write-Host 'No test projects found. Skipping dotnet test.'
+            exit 0
+          }
+
+          foreach ($project in $testProjects) {
+            dotnet test $project --configuration Release --no-build --logger trx
+          }
+
+
+      - name: Preflight documentation and landing assets
+        shell: pwsh
+        run: |
+          $required = @(
+            'docs/index.html',
+            'docs/assets/site.css',
+            'docs/assets/site.js',
+            'docs/assets/favicon.png',
+            'docs/assets/arnet-discovery-main.png',
+            'docs/QUICK_START.pdf',
+            'docs/USER_MANUAL.pdf'
+          )
+          foreach ($file in $required) {
+            if (-not (Test-Path $file)) { throw "Required file missing: $file" }
+          }
+
+      - name: Create portable package preview
+        shell: pwsh
+        run: |
+          .\scripts\publish-windows-portable.ps1 -Version v0.0.0-ci -Configuration Release -Clean
+
+      - name: Verify portable package preview
+        shell: pwsh
+        run: |
+          .\scripts\verify-release-package.ps1 `
+            -ZipPath .\artifacts\release\ARNetDiscovery-v0.0.0-ci-win-x64-portable.zip `
+            -ChecksumPath .\artifacts\release\SHA256SUMS.txt
+
+      - name: Upload portable preview artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ARNetDiscovery-ci-win-x64-portable
+          path: |
+            artifacts/release/ARNetDiscovery-v0.0.0-ci-win-x64-portable.zip
+            artifacts/release/SHA256SUMS.txt
+          if-no-files-found: error

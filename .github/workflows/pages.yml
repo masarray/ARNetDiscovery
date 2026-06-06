@@ -1,0 +1,57 @@
+name: pages
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'docs/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy-pages:
+    name: Deploy GitHub Pages
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Preflight landing assets
+        shell: bash
+        run: |
+          test -f docs/index.html
+          test -f docs/assets/site.css
+          test -f docs/assets/site.js
+          test -f docs/assets/favicon.png
+          test -f docs/assets/app-icon-192.png
+          test -f docs/assets/arnet-discovery-main.png
+          test -f docs/QUICK_START.pdf
+          test -f docs/USER_MANUAL.pdf
+          grep -q 'data-zoom' docs/index.html
+          grep -q 'application/ld+json' docs/index.html
+          grep -q 'rel="canonical"' docs/index.html
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+      - name: Deploy Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

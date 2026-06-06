@@ -1,0 +1,182 @@
+name: release-package
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version, for example v2.16.0 or v2.16.0-public-beta'
+        required: true
+        default: 'v2.16.0-public-beta'
+        type: string
+      publish_release:
+        description: 'Create or update a GitHub Release and upload the portable ZIP'
+        required: true
+        default: false
+        type: boolean
+      prerelease:
+        description: 'Mark the GitHub Release as a prerelease'
+        required: true
+        default: true
+        type: boolean
+      draft:
+        description: 'Create the GitHub Release as a draft'
+        required: true
+        default: false
+        type: boolean
+      release_notes_file:
+        description: 'Markdown file used as the release body'
+        required: false
+        default: 'docs/RELEASE_NOTES_v2.16.0.md'
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  windows-portable-release:
+    name: Build Windows portable package
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Resolve release inputs
+        shell: pwsh
+        run: |
+          if ('${{ github.event_name }}' -eq 'push') {
+            $version = '${{ github.ref_name }}'
+            $publishRelease = 'true'
+            $draft = 'false'
+            $prerelease = if ($version -match '-') { 'true' } else { 'false' }
+            $releaseNotesFile = "docs/RELEASE_NOTES_$version.md"
+            if (-not (Test-Path $releaseNotesFile)) { $releaseNotesFile = 'docs/RELEASE_NOTES_v2.16.0.md' }
+          }
+          else {
+            $version = '${{ inputs.version }}'
+            $publishRelease = '${{ inputs.publish_release }}'.ToLowerInvariant()
+            $draft = '${{ inputs.draft }}'.ToLowerInvariant()
+            $prerelease = '${{ inputs.prerelease }}'.ToLowerInvariant()
+            $releaseNotesFile = '${{ inputs.release_notes_file }}'
+          }
+
+          if (-not ($version -match '^v\d+\.\d+\.\d+([-.][0-9A-Za-z.-]+)?$')) {
+            throw "Release version must look like v2.16.0 or v2.16.0-public-beta. Actual: $version"
+          }
+
+          "RELEASE_VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Append
+          "PUBLISH_RELEASE=$publishRelease" | Out-File -FilePath $env:GITHUB_ENV -Append
+          "RELEASE_DRAFT=$draft" | Out-File -FilePath $env:GITHUB_ENV -Append
+          "RELEASE_PRERELEASE=$prerelease" | Out-File -FilePath $env:GITHUB_ENV -Append
+          "RELEASE_NOTES_FILE=$releaseNotesFile" | Out-File -FilePath $env:GITHUB_ENV -Append
+          "ZIP_NAME=ARNetDiscovery-$version-win-x64-portable.zip" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+      - name: Preflight repository files
+        shell: pwsh
+        run: |
+          $required = @(
+            'README.md', 'LICENSE', 'NOTICE', 'THIRD_PARTY_NOTICES.md',
+            'docs/QUICK_START.md', 'docs/USER_MANUAL.md',
+            'docs/QUICK_START.pdf', 'docs/USER_MANUAL.pdf',
+            'docs/index.html', 'docs/assets/site.css', 'docs/assets/site.js',
+            'docs/assets/favicon.png', 'docs/assets/arnet-discovery-main.png'
+          )
+          foreach ($file in $required) {
+            if (-not (Test-Path $file)) { throw "Required file missing before release: $file" }
+          }
+
+      - name: Restore
+        run: dotnet restore ARNetDiscovery.sln
+
+      - name: Build
+        run: dotnet build ARNetDiscovery.sln --configuration Release --no-restore
+
+      - name: Run tests when test projects exist
+        shell: pwsh
+        run: |
+          $testProjects = Get-ChildItem -Path . -Recurse -Filter '*Tests.csproj' | Select-Object -ExpandProperty FullName
+          if ($testProjects.Count -eq 0) { Write-Host 'No test projects found. Skipping dotnet test.'; exit 0 }
+          foreach ($project in $testProjects) { dotnet test $project --configuration Release --no-build --logger trx }
+
+      - name: Publish and package portable Windows build
+        shell: pwsh
+        run: .\scripts\publish-windows-portable.ps1 -Version $env:RELEASE_VERSION -Configuration Release -Clean
+
+      - name: Verify release package
+        shell: pwsh
+        run: |
+          .\scripts\verify-release-package.ps1 `
+            -ZipPath ".\artifacts\release\$env:ZIP_NAME" `
+            -ChecksumPath .\artifacts\release\SHA256SUMS.txt
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ARNetDiscovery-${{ env.RELEASE_VERSION }}-win-x64-portable
+          path: |
+            artifacts/release/${{ env.ZIP_NAME }}
+            artifacts/release/SHA256SUMS.txt
+          if-no-files-found: error
+
+      - name: Create GitHub Release
+        if: env.PUBLISH_RELEASE == 'true'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $notesFile = $env:RELEASE_NOTES_FILE
+          if (-not (Test-Path $notesFile)) {
+            $notesFile = Join-Path $env:RUNNER_TEMP 'ARNetDiscovery-release-notes.md'
+            $bodyLines = @(
+              "## ARNet Discovery $env:RELEASE_VERSION",
+              "",
+              "This release provides a portable Windows package for ARNet Discovery.",
+              "",
+              "### What's included",
+              "- Windows x64 desktop application.",
+              "- Quick Start PDF and User Manual PDF.",
+              "- License and notice files.",
+              "- SHA256 checksum for download verification.",
+              "",
+              "### How to run",
+              "1. Download ``$env:ZIP_NAME``.",
+              "2. Extract the ZIP to a local folder.",
+              "3. Run ``ARNetDiscovery.exe``.",
+              "4. Select the correct Ethernet adapter before scanning.",
+              "",
+              "### Typical use",
+              "Use **Scan Local** for nearby LAN discovery, **Probe** for known IPs or bounded ranges, and **Import Excel** plus **Scan List** to verify exact project target lists."
+            )
+            $bodyLines | Set-Content -Path $notesFile -Encoding UTF8
+          }
+
+          $assetPaths = @("artifacts/release/$env:ZIP_NAME", 'artifacts/release/SHA256SUMS.txt')
+          gh release view $env:RELEASE_VERSION *> $null
+          $releaseExists = ($LASTEXITCODE -eq 0)
+          if ($releaseExists) {
+            $editArgs = @('release','edit',$env:RELEASE_VERSION,'--title',"ARNet Discovery $env:RELEASE_VERSION",'--notes-file',$notesFile)
+            if ($env:RELEASE_PRERELEASE -eq 'true') { $editArgs += '--prerelease' }
+            if ($env:RELEASE_DRAFT -eq 'true') { $editArgs += '--draft' }
+            gh @editArgs
+            if ($LASTEXITCODE -ne 0) { throw 'gh release edit failed.' }
+            gh release upload $env:RELEASE_VERSION @assetPaths --clobber
+            if ($LASTEXITCODE -ne 0) { throw 'gh release upload failed.' }
+          }
+          else {
+            $createArgs = @('release','create',$env:RELEASE_VERSION,$assetPaths[0],$assetPaths[1],'--title',"ARNet Discovery $env:RELEASE_VERSION",'--notes-file',$notesFile,'--target','${{ github.sha }}')
+            if ($env:RELEASE_PRERELEASE -eq 'true') { $createArgs += '--prerelease' }
+            if ($env:RELEASE_DRAFT -eq 'true') { $createArgs += '--draft' }
+            if ($env:RELEASE_DRAFT -ne 'true' -and $env:RELEASE_PRERELEASE -ne 'true') { $createArgs += '--latest' }
+            gh @createArgs
+            if ($LASTEXITCODE -ne 0) { throw 'gh release create failed.' }
+          }

@@ -1,37 +1,22 @@
-# ARNet Discovery maintainer guidelines
+# ARNet Discovery Contribution Notes
 
-These guidelines help keep ARNet Discovery reliable, lightweight, and useful for field engineering work.
+ARNet Discovery is a Windows desktop application for substation LAN discovery and protocol evidence checks. Changes should keep the application practical, conservative on engineering networks, and easy for users to download and run.
 
-## Product principles
+## Product direction
 
-- Keep the main workflow table-first and evidence-based.
-- Keep the app responsive during scans.
-- Show partial results early; enrich results in the background.
-- Be clear about evidence versus confirmed device identity.
-- Keep the inspector and diagnostics panels secondary and collapsible.
-- Avoid visual noise and oversized dashboard elements.
+- Keep the main device table as the primary work area.
+- Use collapsible inspector and diagnostics panels to preserve space.
+- Treat open ports and protocol labels as evidence, not final identity proof.
+- Keep release packages clean and suitable for users who do not have Visual Studio.
 
-## Scanner principles
+## UI direction
 
-- Keep scan logic inside `ARNetDiscovery.Core`.
-- Route expected network failures to diagnostics.
-- Treat ping timeout as evidence, not as a crash condition.
-- Use guarded async concurrency and cancellation.
-- Keep default scan behavior conservative for industrial LANs.
-- Cap broad subnet scans unless the user explicitly chooses a bounded target list/range.
+- Prefer calm, readable, premium Windows desktop UI.
+- Avoid crowded layouts, excessive glow, and oversized typography.
+- Keep hover states readable and keyboard navigation predictable.
 
-## UI principles
+## Repository direction
 
-- WPF is the primary desktop product line.
-- Use premium, clean, lightweight controls.
-- Avoid default-looking Windows controls when they affect product quality.
-- Keep the central device table as the main work area.
-- Keep icons embedded/vector-based so the project does not depend on bundled font files.
-
-## Repository hygiene
-
-- Keep `bin`, `obj`, `artifacts`, `dist`, and `node_modules` out of Git.
-- Keep documentation user-facing and product-oriented.
-- Keep the project Apache-2.0 friendly.
-- Add tests before making major scanner behavior changes.
-
+- Keep documentation written for users of the application.
+- Keep GitHub Pages deployed from GitHub Actions.
+- Keep release assets focused on the portable Windows app, PDFs, license, notices, and checksums.
