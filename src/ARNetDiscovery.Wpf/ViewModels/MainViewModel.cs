@@ -58,8 +58,8 @@ public sealed class MainViewModel : ViewModelBase
     private string _importedListTitle = "No target list imported";
     private string _importedListSummary = "Import Excel/CSV/TXT to scan exact relay/server IP targets across segments.";
     private DateTime _lastProgressUi = DateTime.MinValue;
-    private bool _isDiagnosticsExpanded;
-    private bool _isInspectorExpanded;
+    private bool _isDiagnosticsExpanded = true;
+    private bool _isInspectorExpanded = true;
     private bool _isAlwaysOnTop = true;
 
     public MainViewModel()

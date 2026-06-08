@@ -16,8 +16,10 @@ The release package is portable: download the ZIP, extract it, and run `ARNetDis
 
 <p align="center">
   <a href="https://masarray.github.io/ARNetDiscovery/">
-    <img src="docs/assets/arnet-discovery-main.png" alt="ARNet Discovery Windows app showing a device discovery table, protocol evidence, diagnostics, and inspector panels" width="920">
+    <img src="docs/assets/arnet-discovery-main.png" alt="ARNet Discovery Windows app showing a device discovery table, protocol evidence, diagnostics, and inspector panels" width="960">
   </a>
+  <br>
+  <sub>Table-first discovery, protocol evidence, diagnostics, and selected-device inspection in one Windows desktop view.</sub>
 </p>
 
 ## What is this?

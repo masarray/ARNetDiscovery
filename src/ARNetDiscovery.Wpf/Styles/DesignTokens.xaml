@@ -7,7 +7,7 @@
     <Color x:Key="ColorPanel">#FFFFFFFF</Color>
     <Color x:Key="ColorInk">#0F172A</Color>
     <Color x:Key="ColorBody">#334155</Color>
-    <Color x:Key="ColorMuted">#94A3B8</Color>
+    <Color x:Key="ColorMuted">#64748B</Color>
     <Color x:Key="ColorSoft">#F1F5F9</Color>
     <Color x:Key="ColorLine">#E5E9EF</Color>
     <Color x:Key="ColorAccent">#2EC4E6</Color>
@@ -35,7 +35,7 @@
     <SolidColorBrush x:Key="BrushAmber" Color="{StaticResource ColorAmber}" />
     <SolidColorBrush x:Key="BrushDanger" Color="{StaticResource ColorDanger}" />
 
-    <DropShadowEffect x:Key="ShadowSoft" BlurRadius="14" ShadowDepth="3" Opacity="0.05" Color="#0F172A" />
-    <DropShadowEffect x:Key="ShadowLift" BlurRadius="22" ShadowDepth="6" Opacity="0.08" Color="#0F172A" />
-    <DropShadowEffect x:Key="ShadowPop" BlurRadius="28" ShadowDepth="8" Opacity="0.12" Color="#0EA5C4" />
+    <DropShadowEffect x:Key="ShadowSoft" BlurRadius="12" ShadowDepth="2" Opacity="0.045" Color="#0F172A" />
+    <DropShadowEffect x:Key="ShadowLift" BlurRadius="20" ShadowDepth="5" Opacity="0.075" Color="#0F172A" />
+    <DropShadowEffect x:Key="ShadowPop" BlurRadius="24" ShadowDepth="5" Opacity="0.10" Color="#0EA5C4" />
 </ResourceDictionary>

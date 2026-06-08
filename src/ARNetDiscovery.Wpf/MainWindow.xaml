@@ -7,7 +7,8 @@
         xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
         mc:Ignorable="d"
         Title="ARNet Discovery"
-        Width="1320" Height="830" MinWidth="1120" MinHeight="700"
+        Icon="pack://application:,,,/Resources/app-icon.ico"
+        Width="1800" Height="830" MinWidth="1120" MinHeight="700"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         ResizeMode="CanResize"
@@ -30,14 +31,15 @@
         <conv:StatusLabelConverter x:Key="StatusLabelConverter" />
 
         <LinearGradientBrush x:Key="ShellBrush" StartPoint="0,0" EndPoint="1,1">
-            <GradientStop Color="#F7F9FC" Offset="0" />
+            <GradientStop Color="#F8FAFC" Offset="0" />
+            <GradientStop Color="#F2F6FA" Offset="0.55" />
             <GradientStop Color="#EEF4F8" Offset="1" />
         </LinearGradientBrush>
 
 
-        <DropShadowEffect x:Key="ShadowSoft" Color="#12304A" BlurRadius="22" ShadowDepth="6" Direction="270" Opacity="0.10" />
-        <DropShadowEffect x:Key="ShadowLift" Color="#12304A" BlurRadius="28" ShadowDepth="8" Direction="270" Opacity="0.14" />
-        <DropShadowEffect x:Key="ShadowButton" Color="#12304A" BlurRadius="14" ShadowDepth="3" Direction="270" Opacity="0.08" />
+        <DropShadowEffect x:Key="ShadowSoft" Color="#12304A" BlurRadius="18" ShadowDepth="4" Direction="270" Opacity="0.075" />
+        <DropShadowEffect x:Key="ShadowLift" Color="#12304A" BlurRadius="24" ShadowDepth="6" Direction="270" Opacity="0.11" />
+        <DropShadowEffect x:Key="ShadowButton" Color="#12304A" BlurRadius="10" ShadowDepth="2" Direction="270" Opacity="0.065" />
 
         <Style x:Key="MaterialIcon" TargetType="Path">
             <Setter Property="Width" Value="17" />
@@ -89,9 +91,9 @@
         </Style>
 
         <Style x:Key="RailIconButton" TargetType="Button">
-            <Setter Property="Width" Value="42" />
-            <Setter Property="Height" Value="42" />
-            <Setter Property="Margin" Value="0,4" />
+            <Setter Property="Width" Value="40" />
+            <Setter Property="Height" Value="40" />
+            <Setter Property="Margin" Value="0,5" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="Foreground" Value="#8B9AB0" />
@@ -101,13 +103,13 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Grid>
-                            <Border x:Name="Root" CornerRadius="15" Background="{TemplateBinding Background}">
+                            <Border x:Name="Root" CornerRadius="13" Background="{TemplateBinding Background}">
                                 <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                             </Border>
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Root" Property="Background" Value="#F2F7FA" />
+                                <Setter TargetName="Root" Property="Background" Value="#EEF6FA" />
                                 <Setter Property="Foreground" Value="#0B1020" />
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
@@ -126,8 +128,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Grid>
-                            <Rectangle Width="3" Height="22" HorizontalAlignment="Left" Margin="-10,0,0,0" Fill="#23BDD8" RadiusX="2" RadiusY="2" />
-                            <Border CornerRadius="15" Background="#E9F8FC">
+                            <Border CornerRadius="13" Background="#E8F7FB" BorderBrush="#C8EEF6" BorderThickness="1">
                                 <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                             </Border>
                         </Grid>
@@ -137,14 +138,14 @@
         </Style>
 
         <Style x:Key="PremiumButton" TargetType="Button">
-            <Setter Property="Height" Value="42" />
-            <Setter Property="MinWidth" Value="116" />
-            <Setter Property="Padding" Value="18,0" />
-            <Setter Property="Margin" Value="0,0,10,0" />
+            <Setter Property="Height" Value="40" />
+            <Setter Property="MinWidth" Value="112" />
+            <Setter Property="Padding" Value="16,0" />
+            <Setter Property="Margin" Value="0,0,8,0" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="BorderBrush" Value="#DCE5EE" />
+            <Setter Property="BorderBrush" Value="#CCD7E3" />
             <Setter Property="Background" Value="#FFFFFF" />
-            <Setter Property="Foreground" Value="#172033" />
+            <Setter Property="Foreground" Value="#0F172A" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="FontSize" Value="12" />
             <Setter Property="Cursor" Value="Hand" />
@@ -156,22 +157,24 @@
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="21"
+                                CornerRadius="14"
                                 SnapsToDevicePixels="True"
                                 Effect="{StaticResource ShadowButton}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2,0" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Root" Property="Background" Value="#FCFEFF" />
-                                <Setter TargetName="Root" Property="BorderBrush" Value="#BFD0E2" />
-                                <Setter Property="Foreground" Value="#172033" />
+                                <Setter TargetName="Root" Property="BorderBrush" Value="#9FB2C8" />
+                                <Setter TargetName="Root" Property="Opacity" Value="0.96" />
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="Root" Property="Background" Value="#EEF4F9" />
+                                <Setter TargetName="Root" Property="Opacity" Value="0.84" />
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="Root" Property="BorderBrush" Value="#2EC4E6" />
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="Root" Property="Opacity" Value="0.42" />
+                                <Setter TargetName="Root" Property="Opacity" Value="0.46" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -180,16 +183,16 @@
         </Style>
 
         <Style x:Key="PrimaryDarkButton" TargetType="Button" BasedOn="{StaticResource PremiumButton}">
-            <Setter Property="Background" Value="#07111F" />
-            <Setter Property="BorderBrush" Value="#07111F" />
+            <Setter Property="Background" Value="#087C92" />
+            <Setter Property="BorderBrush" Value="#087C92" />
             <Setter Property="Foreground" Value="White" />
             <Setter Property="Padding" Value="18,0" />
         </Style>
 
         <Style x:Key="AccentButton" TargetType="Button" BasedOn="{StaticResource PremiumButton}">
-            <Setter Property="Background" Value="#20BBD7" />
-            <Setter Property="BorderBrush" Value="#20BBD7" />
-            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Background" Value="#0EA5C4" />
+            <Setter Property="BorderBrush" Value="#0788A0" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
             <Setter Property="Padding" Value="18,0" />
         </Style>
 
@@ -208,12 +211,12 @@
         <Style x:Key="DiagnosticsClearButton" TargetType="Button" BasedOn="{StaticResource PremiumButton}">
             <Setter Property="MinWidth" Value="54" />
             <Setter Property="Width" Value="54" />
-            <Setter Property="Height" Value="26" />
+            <Setter Property="Height" Value="28" />
             <Setter Property="Padding" Value="10,0" />
             <Setter Property="Margin" Value="0,0,8,0" />
-            <Setter Property="Background" Value="#111C31" />
-            <Setter Property="BorderBrush" Value="#263650" />
-            <Setter Property="Foreground" Value="#EAF2FF" />
+            <Setter Property="Background" Value="#FFFFFF" />
+            <Setter Property="BorderBrush" Value="#CCD7E3" />
+            <Setter Property="Foreground" Value="#0F172A" />
             <Setter Property="FontSize" Value="11" />
         </Style>
 
@@ -293,7 +296,7 @@
                                         <ContentPresenter />
                                     </ControlTemplate>
                                 </ToggleButton.Template>
-                                <Border x:Name="Box" Height="40" Background="#FFFFFF" BorderBrush="#DCE5EE" BorderThickness="1" CornerRadius="16">
+                                <Border x:Name="Box" Height="40" Background="#FFFFFF" BorderBrush="#CCD7E3" BorderThickness="1" CornerRadius="13">
                                     <Grid>
                                         <ContentPresenter Margin="14,0,34,0"
                                                           VerticalAlignment="Center"
@@ -316,11 +319,12 @@
                                         MaxHeight="280"
                                         Margin="0,8,0,0"
                                         Background="White"
-                                        BorderBrush="#D8E2ED"
+                                        BorderBrush="#CCD7E3"
                                         BorderThickness="1"
-                                        CornerRadius="16"
+                                        CornerRadius="14"
                                         Padding="6"
-                                        Effect="{StaticResource ShadowLift}">
+                                        ClipToBounds="True"
+                                        SnapsToDevicePixels="True">
                                     <ScrollViewer CanContentScroll="True">
                                         <ItemsPresenter />
                                     </ScrollViewer>
@@ -329,7 +333,7 @@
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Box" Property="BorderBrush" Value="#B8C9DB" />
+                                <Setter TargetName="Box" Property="BorderBrush" Value="#9FB2C8" />
                                 <Setter TargetName="Box" Property="Background" Value="#FCFEFF" />
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
@@ -378,14 +382,14 @@
         <Style x:Key="ColumnHeader" TargetType="TextBlock">
             <Setter Property="FontSize" Value="10" />
             <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Foreground" Value="#7B8BA3" />
+            <Setter Property="Foreground" Value="#52657A" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
 
         <Style x:Key="SectionLabel" TargetType="TextBlock">
             <Setter Property="FontSize" Value="10" />
             <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Foreground" Value="#7B8BA3" />
+            <Setter Property="Foreground" Value="#52657A" />
             <Setter Property="Margin" Value="0,0,0,8" />
         </Style>
 
@@ -405,19 +409,29 @@
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}">
-                            <ContentPresenter Margin="18,11" />
+                            <ContentPresenter Margin="18,10" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Root" Property="Background" Value="#F8FBFF" />
+                                <Setter TargetName="Root" Property="Background" Value="#F5F9FC" />
+                                <Setter TargetName="Root" Property="BorderBrush" Value="#D5E2ED" />
                             </Trigger>
                             <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="Root" Property="Background" Value="#EEF9FC" />
+                                <Setter TargetName="Root" Property="Background" Value="#E8F7FB" />
+                                <Setter TargetName="Root" Property="BorderBrush" Value="#B9EAF4" />
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                <Setter TargetName="Root" Property="BorderBrush" Value="#2EC4E6" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                    <Setter Property="Background" Value="#F7FAFD" />
+                </Trigger>
+            </Style.Triggers>
         </Style>
 
 
@@ -517,25 +531,78 @@
         </Style>
 
         <Style x:Key="ProgressBarSlim" TargetType="ProgressBar">
-            <Setter Property="Height" Value="4" />
+            <Setter Property="Height" Value="7" />
             <Setter Property="Background" Value="#E4EBF2" />
-            <Setter Property="Foreground" Value="#20BBD7" />
+            <Setter Property="Foreground" Value="#0EA5C4" />
             <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ProgressBar">
+                        <Grid x:Name="TemplateRoot" ClipToBounds="True">
+                            <Border x:Name="PART_Track"
+                                    Height="{TemplateBinding Height}"
+                                    Background="{TemplateBinding Background}"
+                                    CornerRadius="4" />
+                            <Border x:Name="PART_Indicator"
+                                    Height="{TemplateBinding Height}"
+                                    HorizontalAlignment="Left"
+                                    CornerRadius="4"
+                                    ClipToBounds="True">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                        <GradientStop Color="#087C92" Offset="0" />
+                                        <GradientStop Color="#0EA5C4" Offset="0.52" />
+                                        <GradientStop Color="#7ADCEF" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <Border x:Name="Sweep"
+                                        Width="130"
+                                        HorizontalAlignment="Left"
+                                        Opacity="0.28"
+                                        RenderTransformOrigin="0.5,0.5">
+                                    <Border.RenderTransform>
+                                        <TranslateTransform X="-150" />
+                                    </Border.RenderTransform>
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                            <GradientStop Color="#00FFFFFF" Offset="0" />
+                                            <GradientStop Color="#FFFFFFFF" Offset="0.5" />
+                                            <GradientStop Color="#00FFFFFF" Offset="1" />
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                </Border>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard RepeatBehavior="Forever">
+                                        <DoubleAnimation Storyboard.TargetName="Sweep"
+                                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                                         From="-150"
+                                                         To="760"
+                                                         Duration="0:0:1.8" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
     </Window.Resources>
 
-    <Grid Background="{StaticResource ShellBrush}">
+    <Grid x:Name="ShellRoot" Background="{StaticResource ShellBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="54" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="72" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <Border Grid.Row="0" Grid.ColumnSpan="3" Background="#FFFFFF" BorderBrush="#DCE4EF" BorderThickness="0,0,0,1" MouseLeftButtonDown="TopChrome_MouseLeftButtonDown">
+        <Border Grid.Row="0" Grid.ColumnSpan="2" Background="#FFFFFF" BorderBrush="#D9E3ED" BorderThickness="0,0,0,1" MouseLeftButtonDown="TopChrome_MouseLeftButtonDown">
             <Grid Margin="18,0,10,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -548,14 +615,14 @@
                     </Border>
                     <TextBlock Text="ARNet" FontSize="13" FontWeight="SemiBold" Foreground="#0B1020" Margin="12,0,0,0" VerticalAlignment="Center" />
                     <TextBlock Text=" Discovery" FontSize="13" FontWeight="SemiBold" Foreground="#0EA5C4" VerticalAlignment="Center" />
-                    <Border CornerRadius="10" Background="#EFF7FA" Padding="8,3" Margin="12,0,0,0">
+                    <Border CornerRadius="9" Background="#E8F7FB" Padding="8,3" Margin="12,0,0,0" BorderBrush="#C8EEF6" BorderThickness="1">
                         <StackPanel Orientation="Horizontal">
                             <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=bolt}" Fill="#0EA5C4" Width="12" Height="12" />
-                            <TextBlock Text="Progressive evidence scanner" FontSize="10" Foreground="#60708A" Margin="5,0,0,0" VerticalAlignment="Center" />
+                            <TextBlock Text="Progressive evidence scanner" FontSize="10" Foreground="#52657A" Margin="5,0,0,0" VerticalAlignment="Center" />
                         </StackPanel>
                     </Border>
                 </StackPanel>
-                <TextBlock Grid.Column="1" Text="{Binding AdapterSummary}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" Foreground="#60708A" TextTrimming="CharacterEllipsis" MaxWidth="560" />
+                <TextBlock Grid.Column="1" Text="{Binding AdapterSummary}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" Foreground="#52657A" TextTrimming="CharacterEllipsis" MaxWidth="560" />
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                     <Button Style="{StaticResource WindowIconButton}" Command="{Binding ToggleAlwaysOnTopCommand}" ToolTip="{Binding AlwaysOnTopToolTip}">
                         <Grid>
@@ -576,31 +643,7 @@
             </Grid>
         </Border>
 
-        <Border Grid.Row="1" Grid.Column="0" Background="#FFFFFF" BorderBrush="#DCE4EF" BorderThickness="0,0,1,0">
-            <Grid Margin="0,18">
-                <StackPanel HorizontalAlignment="Center">
-                    <Button Style="{StaticResource RailIconButtonActive}" ToolTip="Discovery">
-                        <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=hub}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
-                    </Button>
-                    <Button Style="{StaticResource RailIconButton}" ToolTip="Target list" Command="{Binding ImportTargetListCommand}">
-                        <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=excel}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
-                    </Button>
-                    <Button Style="{StaticResource RailIconButton}" ToolTip="Evidence / Inspector" Command="{Binding ToggleInspectorCommand}">
-                        <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=analytics}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
-                    </Button>
-                    <Button Style="{StaticResource RailIconButton}" ToolTip="Diagnostics panel" Command="{Binding ToggleDiagnosticsCommand}">
-                        <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=bug_report}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
-                    </Button>
-                </StackPanel>
-                <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center">
-                    <Button Style="{StaticResource RailIconButton}" ToolTip="Toggle always on top" Command="{Binding ToggleAlwaysOnTopCommand}">
-                        <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=settings}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
-                    </Button>
-                </StackPanel>
-            </Grid>
-        </Border>
-
-        <Grid Grid.Row="1" Grid.Column="1" Margin="24,20,22,18">
+        <Grid Grid.Row="1" Grid.Column="0" Margin="24,18,22,18">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -608,15 +651,15 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" Margin="0,0,0,14">
+            <Grid Grid.Row="0" Margin="0,0,0,12">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <StackPanel>
-                    <TextBlock Text="Devices on your network" FontSize="22" FontWeight="SemiBold" Foreground="#0B1020" />
+                    <TextBlock Text="Devices on your network" FontSize="21" FontWeight="SemiBold" Foreground="#0B1020" />
                 </StackPanel>
-                <Border Grid.Column="1" Height="34" CornerRadius="17" Background="#FFFFFF" BorderBrush="#DCE5EE" BorderThickness="1" Padding="12,0" VerticalAlignment="Center">
+                <Border Grid.Column="1" Height="32" CornerRadius="12" Background="#FFFFFF" BorderBrush="#CCD7E3" BorderThickness="1" Padding="12,0" VerticalAlignment="Center">
                     <StackPanel Orientation="Horizontal">
                         <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=info}" Fill="#20BBD7" Width="14" Height="14" />
                         <TextBlock Text="{Binding ScanStateLabel}" Foreground="#172033" FontSize="11" FontWeight="SemiBold" Margin="7,0,0,0" VerticalAlignment="Center" />
@@ -624,9 +667,10 @@
                 </Border>
             </Grid>
 
-            <Border Grid.Row="1" Background="#FFFFFF" BorderBrush="#DCE5EE" BorderThickness="1" CornerRadius="22" Padding="16" Effect="{StaticResource ShadowSoft}" Margin="0,0,0,14">
+            <Border Grid.Row="1" Background="#FFFFFF" BorderBrush="#CCD7E3" BorderThickness="1" CornerRadius="18" Padding="14" Effect="{StaticResource ShadowSoft}" Margin="0,0,0,14">
                 <Grid>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -636,10 +680,10 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="320" />
                         </Grid.ColumnDefinitions>
-                        <Border Height="42" Background="#F8FBFD" BorderBrush="#DCE5EE" BorderThickness="1" CornerRadius="16" Padding="14,0" Margin="0,0,12,0">
+                        <Border Height="40" Background="#F8FBFD" BorderBrush="#D5E0EA" BorderThickness="1" CornerRadius="13" Padding="13,0" Margin="0,0,12,0">
                             <Grid>
                                 <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=search}" Fill="#60708A" Width="16" Height="16" HorizontalAlignment="Left" />
-                                <TextBlock Text="Search device, vendor, IP, protocol" Foreground="#7C8CA2" FontSize="12" Margin="27,0,0,0" VerticalAlignment="Center" IsHitTestVisible="False"
+                                <TextBlock Text="Search device, vendor, IP, protocol" Foreground="#64748B" FontSize="12" Margin="27,0,0,0" VerticalAlignment="Center" IsHitTestVisible="False"
                                            Visibility="{Binding FilterText, Converter={StaticResource StringEmptyToVisible}}" />
                                 <TextBox Style="{StaticResource CleanTextBox}" Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}" Margin="27,0,0,0" />
                             </Grid>
@@ -652,10 +696,10 @@
                             <ColumnDefinition Width="240" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Border Height="40" Background="#F8FBFD" BorderBrush="#DCE5EE" BorderThickness="1" CornerRadius="16" Padding="13,0" Margin="0,0,10,0">
+                        <Border Height="40" Background="#F8FBFD" BorderBrush="#D5E0EA" BorderThickness="1" CornerRadius="13" Padding="13,0" Margin="0,0,10,0">
                             <Grid>
                                 <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=router}" Fill="#60708A" Width="15" Height="15" HorizontalAlignment="Left" />
-                                <TextBlock Text="IP / CIDR / range" Foreground="#7C8CA2" FontSize="12" Margin="25,0,0,0" VerticalAlignment="Center" IsHitTestVisible="False"
+                                <TextBlock Text="IP / CIDR / range" Foreground="#64748B" FontSize="12" Margin="25,0,0,0" VerticalAlignment="Center" IsHitTestVisible="False"
                                            Visibility="{Binding DirectTargetText, Converter={StaticResource StringEmptyToVisible}}" />
                                 <TextBox Style="{StaticResource CleanTextBox}" Text="{Binding DirectTargetText, UpdateSourceTrigger=PropertyChanged}" Margin="25,0,0,0" />
                             </Grid>
@@ -664,7 +708,7 @@
                         <WrapPanel Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" ItemHeight="42" ItemWidth="Auto" Margin="8,0,0,0">
                             <Button Style="{StaticResource PremiumButton}" Command="{Binding ProbeTargetCommand}" Width="124">
                                 <StackPanel Orientation="Horizontal">
-                                    <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=science}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Width="15" Height="15" />
+                                    <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=network_probe}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Width="15" Height="15" />
                                     <TextBlock Text="Probe" Margin="8,0,0,0" />
                                 </StackPanel>
                             </Button>
@@ -713,21 +757,21 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Border Height="28" CornerRadius="14" Background="#F8FBFD" BorderBrush="#DCE5EE" BorderThickness="1" Padding="10,0" Margin="0,0,8,0">
+                            <Border Height="28" CornerRadius="12" Background="#F8FBFD" BorderBrush="#D5E0EA" BorderThickness="1" Padding="10,0" Margin="0,0,8,0">
                                 <StackPanel Orientation="Horizontal">
                                     <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=devices}" Fill="#60708A" Width="13" Height="13" />
                                     <TextBlock Text="{Binding DiscoveredHosts}" Foreground="#0B1020" FontWeight="SemiBold" Margin="6,0,0,0" VerticalAlignment="Center" />
                                     <TextBlock Text=" devices" Foreground="#60708A" FontSize="11" VerticalAlignment="Center" />
                                 </StackPanel>
                             </Border>
-                            <Border Height="28" CornerRadius="14" Background="#F8FBFD" BorderBrush="#DCE5EE" BorderThickness="1" Padding="10,0" Margin="0,0,8,0">
+                            <Border Height="28" CornerRadius="12" Background="#F8FBFD" BorderBrush="#D5E0EA" BorderThickness="1" Padding="10,0" Margin="0,0,8,0">
                                 <StackPanel Orientation="Horizontal">
                                     <Ellipse Width="7" Height="7" Fill="#08A877" VerticalAlignment="Center" />
                                     <TextBlock Text="{Binding OnlineCount}" Foreground="#0B1020" FontWeight="SemiBold" Margin="7,0,0,0" VerticalAlignment="Center" />
                                     <TextBlock Text=" online" Foreground="#60708A" FontSize="11" VerticalAlignment="Center" />
                                 </StackPanel>
                             </Border>
-                            <Border Height="28" CornerRadius="14" Background="#F8FBFD" BorderBrush="#DCE5EE" BorderThickness="1" Padding="10,0" Margin="0,0,8,0">
+                            <Border Height="28" CornerRadius="12" Background="#F8FBFD" BorderBrush="#D5E0EA" BorderThickness="1" Padding="10,0" Margin="0,0,8,0">
                                 <StackPanel Orientation="Horizontal">
                                     <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=analytics}" Fill="#20BBD7" Width="13" Height="13" />
                                     <TextBlock Text="{Binding IndustrialCandidateCount}" Foreground="#0B1020" FontWeight="SemiBold" Margin="6,0,0,0" VerticalAlignment="Center" />
@@ -739,17 +783,18 @@
                         <TextBlock Grid.Column="1" Text="{Binding ScanProgressText}" Foreground="#60708A" FontSize="11" VerticalAlignment="Center" />
                     </Grid>
 
-                    <ProgressBar Grid.Row="2" Height="3" Margin="0,44,0,0" Style="{StaticResource ProgressBarSlim}" Minimum="0" Maximum="100" Value="{Binding ProgressPercent, Mode=OneWay}" />
+                    <ProgressBar Grid.Row="3" Margin="0,12,0,0" Style="{StaticResource ProgressBarSlim}" Minimum="0" Maximum="100" Value="{Binding ProgressPercent, Mode=OneWay}" />
                 </Grid>
             </Border>
 
-            <Border Grid.Row="2" Background="#FFFFFF" BorderBrush="#DCE5EE" BorderThickness="1" CornerRadius="0" ClipToBounds="False" Effect="{StaticResource ShadowSoft}">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="44" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Border Background="#FAFCFE" BorderBrush="#E7EDF4" BorderThickness="0,0,0,1" Padding="18,0">
+            <Border Grid.Row="2" Background="Transparent" CornerRadius="20" Effect="{StaticResource ShadowSoft}">
+                <Border Background="#FFFFFF" BorderBrush="#CCD7E3" BorderThickness="1" CornerRadius="18" ClipToBounds="True">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="44" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Border Background="#FAFCFE" BorderBrush="#E2EAF2" BorderThickness="0,0,0,1" CornerRadius="18,18,0,0" Padding="18,0">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="1.75*" />
@@ -766,19 +811,19 @@
                             <TextBlock Grid.Column="4" Text="PING" Style="{StaticResource ColumnHeader}" />
                             <TextBlock Grid.Column="5" Text="STATUS" Style="{StaticResource ColumnHeader}" HorizontalAlignment="Right" />
                         </Grid>
-                    </Border>
+                        </Border>
 
-                    <Border Grid.Row="1" Visibility="{Binding HasVisibleDevices, Converter={StaticResource BoolToCollapsedInvert}}" VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="520" Padding="24">
-                        <StackPanel>
-                            <Border Width="64" Height="64" CornerRadius="22" Background="#EAF8FC" HorizontalAlignment="Center">
-                                <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=hub}" Fill="#0EA5C4" Width="26" Height="26" />
-                            </Border>
-                            <TextBlock Text="{Binding ScanInsightTitle}" HorizontalAlignment="Center" TextAlignment="Center" FontSize="16" FontWeight="SemiBold" Foreground="#0B1020" Margin="0,16,0,0" />
-                            <TextBlock Text="{Binding ScanAdvice}" TextAlignment="Center" TextWrapping="Wrap" Foreground="#60708A" FontSize="12" Margin="0,8,0,0" />
-                        </StackPanel>
-                    </Border>
+                        <Border Grid.Row="1" Visibility="{Binding HasVisibleDevices, Converter={StaticResource BoolToCollapsedInvert}}" VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="520" Padding="24">
+                            <StackPanel>
+                                <Border Width="64" Height="64" CornerRadius="18" Background="#EAF8FC" HorizontalAlignment="Center">
+                                    <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=hub}" Fill="#0EA5C4" Width="26" Height="26" />
+                                </Border>
+                                <TextBlock Text="{Binding ScanInsightTitle}" HorizontalAlignment="Center" TextAlignment="Center" FontSize="16" FontWeight="SemiBold" Foreground="#0B1020" Margin="0,16,0,0" />
+                                <TextBlock Text="{Binding ScanAdvice}" TextAlignment="Center" TextWrapping="Wrap" Foreground="#60708A" FontSize="12" Margin="0,8,0,0" />
+                            </StackPanel>
+                        </Border>
 
-                    <ListBox Grid.Row="1"
+                        <ListBox Grid.Row="1"
                              Visibility="{Binding HasVisibleDevices, Converter={StaticResource BoolToVisible}}"
                              ItemsSource="{Binding VisibleDevices}"
                              SelectedItem="{Binding SelectedDevice, Mode=TwoWay}"
@@ -787,6 +832,7 @@
                              Background="Transparent"
                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                              ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             AlternationCount="2"
                              VirtualizingStackPanel.IsVirtualizing="True"
                              VirtualizingStackPanel.VirtualizationMode="Recycling"
                              ScrollViewer.CanContentScroll="True">
@@ -802,7 +848,7 @@
                                         <ColumnDefinition Width="0.82*" />
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Orientation="Horizontal">
-                                        <Border Width="38" Height="38" CornerRadius="14" Background="#F7FAFD" BorderBrush="#E2EAF2" BorderThickness="1">
+                                        <Border Width="38" Height="38" CornerRadius="12" Background="#F7FAFD" BorderBrush="#E2EAF2" BorderThickness="1">
                                             <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}}" Fill="#172033" Width="17" Height="17" />
                                         </Border>
                                         <StackPanel Margin="11,0,0,0" VerticalAlignment="Center">
@@ -823,11 +869,12 @@
                                 </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
-                    </ListBox>
-                </Grid>
+                        </ListBox>
+                    </Grid>
+                </Border>
             </Border>
 
-            <Border Grid.Row="3" Height="{Binding DiagnosticsPanelHeight}" Margin="0,12,0,0" Background="#07111F" CornerRadius="18" ClipToBounds="True">
+            <Border Grid.Row="3" Height="{Binding DiagnosticsPanelHeight}" Margin="0,12,0,0" Background="#FFFFFF" BorderBrush="#CCD7E3" BorderThickness="1" CornerRadius="18" ClipToBounds="True" SnapsToDevicePixels="True">
                 <Grid Margin="16,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="38" />
@@ -836,22 +883,25 @@
                     <Grid Cursor="Hand" MouseLeftButtonUp="DiagnosticsPanel_MouseLeftButtonUp">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=bug_report}" Fill="#23BDD8" Width="15" Height="15" />
-                        <TextBlock Text="Diagnostics" Foreground="White" FontWeight="SemiBold" FontSize="12" Margin="23,0,0,0" VerticalAlignment="Center" />
-                        <TextBlock Grid.Column="1" Text="{Binding ScanStateMessage}" Foreground="#C8D4E4" FontSize="11" Margin="102,0,12,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
-                        <Button Grid.Column="2" Style="{StaticResource DiagnosticsClearButton}" Command="{Binding ClearDiagnosticsCommand}" Content="Clear" />
-                        <Button Grid.Column="3" Style="{StaticResource ChevronIconButton}" Command="{Binding ToggleDiagnosticsCommand}" Visibility="{Binding IsDiagnosticsExpanded, Converter={StaticResource BoolToCollapsedInvert}}" ToolTip="Expand diagnostics">
+                        <Border Width="26" Height="26" CornerRadius="9" Background="#E8F7FB" BorderBrush="#C8EEF6" BorderThickness="1" VerticalAlignment="Center">
+                            <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=bug_report}" Fill="#0EA5C4" Width="14" Height="14" />
+                        </Border>
+                        <TextBlock Grid.Column="1" Text="Diagnostics" Foreground="#0B1020" FontWeight="SemiBold" FontSize="12" Margin="9,0,16,0" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="2" Text="{Binding ScanStateMessage}" Foreground="#52657A" FontSize="11" Margin="0,0,12,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                        <Button Grid.Column="3" Style="{StaticResource DiagnosticsClearButton}" Command="{Binding ClearDiagnosticsCommand}" Content="Clear" />
+                        <Button Grid.Column="4" Style="{StaticResource InspectorChevronButton}" Command="{Binding ToggleDiagnosticsCommand}" Visibility="{Binding IsDiagnosticsExpanded, Converter={StaticResource BoolToCollapsedInvert}}" ToolTip="Expand diagnostics">
                             <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=chevron_circle_up}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Width="20" Height="20" />
                         </Button>
-                        <Button Grid.Column="3" Style="{StaticResource ChevronIconButton}" Command="{Binding ToggleDiagnosticsCommand}" Visibility="{Binding IsDiagnosticsExpanded, Converter={StaticResource BoolToVisible}}" ToolTip="Collapse diagnostics">
+                        <Button Grid.Column="4" Style="{StaticResource InspectorChevronButton}" Command="{Binding ToggleDiagnosticsCommand}" Visibility="{Binding IsDiagnosticsExpanded, Converter={StaticResource BoolToVisible}}" ToolTip="Collapse diagnostics">
                             <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=chevron_circle_down}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Width="20" Height="20" />
                         </Button>
                     </Grid>
-                    <ListBox Grid.Row="1" ItemsSource="{Binding Diagnostics}" Background="Transparent" BorderThickness="0" Foreground="#E2E8F0" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <ListBox Grid.Row="1" ItemsSource="{Binding Diagnostics}" Background="Transparent" BorderThickness="0" Foreground="#172033" ScrollViewer.VerticalScrollBarVisibility="Auto">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <Grid Margin="0,3">
@@ -861,10 +911,10 @@
                                         <ColumnDefinition Width="130" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Text="{Binding Timestamp, StringFormat={}{0:HH:mm:ss}}" FontSize="10.5" Foreground="#94A3B8" />
-                                    <TextBlock Grid.Column="1" Text="{Binding Severity}" FontSize="10.5" Foreground="#7DD3FC" />
-                                    <TextBlock Grid.Column="2" Text="{Binding Source}" FontSize="10.5" Foreground="#CBD5E1" TextTrimming="CharacterEllipsis" />
-                                    <TextBlock Grid.Column="3" Text="{Binding Message}" FontSize="10.5" Foreground="#E2E8F0" TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Text="{Binding Timestamp, StringFormat={}{0:HH:mm:ss}}" FontSize="10.5" Foreground="#64748B" />
+                                    <TextBlock Grid.Column="1" Text="{Binding Severity}" FontSize="10.5" Foreground="#0EA5C4" />
+                                    <TextBlock Grid.Column="2" Text="{Binding Source}" FontSize="10.5" Foreground="#334155" TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Grid.Column="3" Text="{Binding Message}" FontSize="10.5" Foreground="#0F172A" TextTrimming="CharacterEllipsis" />
                                 </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
@@ -873,7 +923,15 @@
             </Border>
         </Grid>
 
-        <Border Grid.Row="1" Grid.Column="2" Width="{Binding InspectorPanelWidth}" Background="#F9FBFD" BorderBrush="#DCE4EF" BorderThickness="1,0,0,0" MouseLeftButtonUp="InspectorPanel_MouseLeftButtonUp">
+        <Border Grid.Row="1" Grid.Column="1"
+                Width="{Binding InspectorPanelWidth}"
+                Margin="0,62,18,18"
+                Background="#FFFFFF"
+                BorderBrush="#CCD7E3"
+                BorderThickness="1"
+                CornerRadius="20"
+                Effect="{StaticResource ShadowSoft}"
+                MouseLeftButtonUp="InspectorPanel_MouseLeftButtonUp">
             <Grid>
                 <Button Style="{StaticResource InspectorChevronButton}"
                         Command="{Binding ToggleInspectorCommand}"
@@ -905,7 +963,7 @@
 
                 <Grid Grid.Row="1" Margin="0,18,0,0">
                     <StackPanel Visibility="{Binding SelectedDevice, Converter={StaticResource NullToCollapsedInvert}}" VerticalAlignment="Center">
-                        <Border Width="66" Height="66" CornerRadius="24" Background="#EAF8FC" HorizontalAlignment="Center">
+                        <Border Width="66" Height="66" CornerRadius="18" Background="#EAF8FC" HorizontalAlignment="Center">
                             <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=devices}" Fill="#0EA5C4" Width="28" Height="28" />
                         </Border>
                         <TextBlock Text="Select a device" HorizontalAlignment="Center" FontSize="14" FontWeight="SemiBold" Foreground="#0B1020" Margin="0,14,0,0" />
@@ -914,10 +972,10 @@
 
                     <ScrollViewer Visibility="{Binding SelectedDevice, Converter={StaticResource NullToVisible}}" VerticalScrollBarVisibility="Auto">
                         <StackPanel>
-                            <Border Background="#FFFFFF" BorderBrush="#DCE5EE" BorderThickness="1" CornerRadius="22" Padding="16" Effect="{StaticResource ShadowSoft}">
+                            <Border Background="#FFFFFF" BorderBrush="#D5E0EA" BorderThickness="1" CornerRadius="18" Padding="16" Effect="{StaticResource ShadowSoft}">
                                 <StackPanel>
                                     <StackPanel Orientation="Horizontal">
-                                        <Border Width="58" Height="58" CornerRadius="20" Background="#F7FAFD" BorderBrush="#E2EAF2" BorderThickness="1">
+                                        <Border Width="58" Height="58" CornerRadius="16" Background="#F7FAFD" BorderBrush="#E2EAF2" BorderThickness="1">
                                             <Path Style="{StaticResource MaterialIcon}" Data="{Binding SelectedDevice, Converter={StaticResource MaterialIconConverter}}" Fill="#172033" Width="24" Height="24" />
                                         </Border>
                                         <StackPanel Margin="13,0,0,0" VerticalAlignment="Center">
@@ -934,7 +992,7 @@
                                 </StackPanel>
                             </Border>
 
-                            <Border Background="#FFFFFF" BorderBrush="#DCE5EE" BorderThickness="1" CornerRadius="20" Padding="15" Margin="0,12,0,0" Visibility="{Binding SelectedDevice.IsExpectedTarget, Converter={StaticResource BoolToVisible}}">
+                            <Border Background="#FFFFFF" BorderBrush="#D5E0EA" BorderThickness="1" CornerRadius="16" Padding="15" Margin="0,12,0,0" Visibility="{Binding SelectedDevice.IsExpectedTarget, Converter={StaticResource BoolToVisible}}">
                                 <StackPanel>
                                     <TextBlock Text="EXPECTED TARGET" Style="{StaticResource SectionLabel}" />
                                     <TextBlock Text="{Binding SelectedDevice.ExpectedDeviceName}" FontSize="12.3" FontWeight="SemiBold" Foreground="#0B1020" TextTrimming="CharacterEllipsis" />
@@ -943,7 +1001,7 @@
                                 </StackPanel>
                             </Border>
 
-                            <Border Background="#FFFFFF" BorderBrush="#DCE5EE" BorderThickness="1" CornerRadius="20" Padding="15" Margin="0,12,0,0">
+                            <Border Background="#FFFFFF" BorderBrush="#D5E0EA" BorderThickness="1" CornerRadius="16" Padding="15" Margin="0,12,0,0">
                                 <StackPanel>
                                     <TextBlock Text="NETWORK EVIDENCE" Style="{StaticResource SectionLabel}" />
                                     <Grid Height="30">
@@ -978,7 +1036,7 @@
                                 </StackPanel>
                             </Border>
 
-                            <Border Background="#FFFFFF" BorderBrush="#DCE5EE" BorderThickness="1" CornerRadius="20" Padding="15" Margin="0,12,0,0" Visibility="{Binding SelectedDevice.HasOpenPorts, Converter={StaticResource BoolToVisible}}">
+                            <Border Background="#FFFFFF" BorderBrush="#D5E0EA" BorderThickness="1" CornerRadius="16" Padding="15" Margin="0,12,0,0" Visibility="{Binding SelectedDevice.HasOpenPorts, Converter={StaticResource BoolToVisible}}">
                                 <StackPanel>
                                     <TextBlock Text="OPEN PORTS" Style="{StaticResource SectionLabel}" />
                                     <ItemsControl ItemsSource="{Binding SelectedDevice.OpenPorts}">
@@ -989,7 +1047,7 @@
                                         </ItemsControl.ItemsPanel>
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Border CornerRadius="12" Padding="8,4" Margin="0,0,6,6" Background="#E8F8FC" BorderBrush="#CBEFF6" BorderThickness="1">
+                                                <Border CornerRadius="10" Padding="8,4" Margin="0,0,6,6" Background="#E8F8FC" BorderBrush="#CBEFF6" BorderThickness="1">
                                                     <StackPanel Orientation="Horizontal">
                                                         <TextBlock Text="{Binding Port}" FontWeight="SemiBold" FontSize="11" Foreground="#0A96B5" />
                                                         <TextBlock Text=" " />
@@ -1002,7 +1060,7 @@
                                 </StackPanel>
                             </Border>
 
-                            <Border Background="#FFFFFF" BorderBrush="#DCE5EE" BorderThickness="1" CornerRadius="20" Padding="15" Margin="0,12,0,0">
+                            <Border Background="#FFFFFF" BorderBrush="#D5E0EA" BorderThickness="1" CornerRadius="16" Padding="15" Margin="0,12,0,0">
                                 <StackPanel>
                                     <TextBlock Text="FINGERPRINT" Style="{StaticResource SectionLabel}" />
                                     <TextBlock Text="{Binding SelectedDevice.ProtocolSummary}" TextWrapping="Wrap" Foreground="#172033" FontSize="11.6" />

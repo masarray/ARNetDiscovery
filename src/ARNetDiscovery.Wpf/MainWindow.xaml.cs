@@ -12,6 +12,8 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        StateChanged += (_, _) => ApplyChromeSafeMargin();
+        Loaded += (_, _) => ApplyChromeSafeMargin();
     }
 
     private void TopChrome_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -98,5 +100,23 @@ public partial class MainWindow : Window
     }
 
     private void ToggleMaximizeRestore()
-        => WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+    {
+        WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+        ApplyChromeSafeMargin();
+    }
+
+    private void ApplyChromeSafeMargin()
+    {
+        if (WindowState == WindowState.Maximized)
+        {
+            MaxWidth = SystemParameters.WorkArea.Width;
+            MaxHeight = SystemParameters.WorkArea.Height;
+            ShellRoot.Margin = new Thickness(0);
+            return;
+        }
+
+        MaxWidth = double.PositiveInfinity;
+        MaxHeight = double.PositiveInfinity;
+        ShellRoot.Margin = new Thickness(0);
+    }
 }
