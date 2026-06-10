@@ -4,21 +4,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:conv="clr-namespace:ARNetDiscovery.Wpf.Converters"
-        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
         mc:Ignorable="d"
         Title="ARNet Discovery"
         Icon="pack://application:,,,/Resources/app-icon.ico"
         Width="1800" Height="830" MinWidth="1120" MinHeight="700"
         WindowStartupLocation="CenterScreen"
-        WindowStyle="None"
+        WindowStyle="SingleBorderWindow"
         ResizeMode="CanResize"
         Background="#F5F7FA"
         Topmost="{Binding IsAlwaysOnTop}"
         UseLayoutRounding="True"
         SnapsToDevicePixels="True">
-    <shell:WindowChrome.WindowChrome>
-        <shell:WindowChrome CaptionHeight="0" ResizeBorderThickness="7" GlassFrameThickness="0" UseAeroCaptionButtons="False" />
-    </shell:WindowChrome.WindowChrome>
 
     <Window.Resources>
         <conv:StatusBrushConverter x:Key="StatusBrushConverter" />
@@ -27,13 +23,45 @@
         <conv:BoolToVisibilityConverter x:Key="BoolToVisible" />
         <conv:BoolToVisibilityConverter x:Key="BoolToCollapsedInvert" Invert="True" />
         <conv:StringEmptyToVisibilityConverter x:Key="StringEmptyToVisible" />
+        <conv:StringEmptyToVisibilityConverter x:Key="StringNotEmptyToVisible" Invert="True" />
         <conv:MaterialIconConverter x:Key="MaterialIconConverter" />
+        <conv:DeviceIconBrushConverter x:Key="DeviceIconBrushConverter" />
         <conv:StatusLabelConverter x:Key="StatusLabelConverter" />
 
         <LinearGradientBrush x:Key="ShellBrush" StartPoint="0,0" EndPoint="1,1">
             <GradientStop Color="#F8FAFC" Offset="0" />
             <GradientStop Color="#F2F6FA" Offset="0.55" />
             <GradientStop Color="#EEF4F8" Offset="1" />
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="SurfaceControlBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#FFFFFF" Offset="0" />
+            <GradientStop Color="#F8FCFE" Offset="0.58" />
+            <GradientStop Color="#EEF9FC" Offset="1" />
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="SurfaceTableBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#FFFFFF" Offset="0" />
+            <GradientStop Color="#FAFCFE" Offset="0.62" />
+            <GradientStop Color="#F2F6FA" Offset="1" />
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="SurfaceDiagnosticsBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#FFFFFF" Offset="0" />
+            <GradientStop Color="#F8FCFB" Offset="0.54" />
+            <GradientStop Color="#F1FAF8" Offset="1" />
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="SurfacePropertiesBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#FFFFFF" Offset="0" />
+            <GradientStop Color="#FAFCFF" Offset="0.55" />
+            <GradientStop Color="#F1F7FD" Offset="1" />
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="SurfacePropertiesCardBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#FFFFFF" Offset="0" />
+            <GradientStop Color="#F9FCFD" Offset="0.68" />
+            <GradientStop Color="#F2FBFC" Offset="1" />
         </LinearGradientBrush>
 
 
@@ -386,6 +414,61 @@
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
 
+        <Style x:Key="TableHeaderButton" TargetType="Button">
+            <Setter Property="Height" Value="34" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="#52657A" />
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Root" Background="{TemplateBinding Background}" CornerRadius="8" Padding="0,0,6,0">
+                            <ContentPresenter VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Root" Property="Background" Value="#EEF6FA" />
+                                <Setter Property="Foreground" Value="#0B1020" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Root" Property="Opacity" Value="0.76" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ColumnResizeSplitter" TargetType="GridSplitter">
+            <Setter Property="Width" Value="8" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="ResizeDirection" Value="Columns" />
+            <Setter Property="ResizeBehavior" Value="PreviousAndNext" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="ShowsPreview" Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="GridSplitter">
+                        <Grid Background="Transparent">
+                            <Border x:Name="Rail" Width="1" HorizontalAlignment="Center" Background="#D5E0EA" Opacity="0.42" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Rail" Property="Background" Value="#0EA5C4" />
+                                <Setter TargetName="Rail" Property="Opacity" Value="0.9" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <Style x:Key="SectionLabel" TargetType="TextBlock">
             <Setter Property="FontSize" Value="10" />
             <Setter Property="FontWeight" Value="SemiBold" />
@@ -436,9 +519,10 @@
 
 
         <Style x:Key="SlimScrollThumb" TargetType="Thumb">
-            <!-- Vertical scrollbar: keep the rail narrow, only protect thumb height. -->
-            <Setter Property="MinHeight" Value="64" />
+            <Setter Property="MinHeight" Value="42" />
+            <Setter Property="MaxHeight" Value="168" />
             <Setter Property="MinWidth" Value="0" />
+            <Setter Property="MaxWidth" Value="168" />
             <Setter Property="Opacity" Value="0.78" />
             <Setter Property="Template">
                 <Setter.Value>
@@ -450,15 +534,15 @@
                                     VerticalAlignment="Stretch"
                                     Background="#B8C6D8"
                                     CornerRadius="3"
-                                    Margin="0,2" />
+                                    Margin="0" />
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="Tag" Value="Horizontal">
                                 <Setter Property="MinHeight" Value="0" />
-                                <Setter Property="MinWidth" Value="64" />
+                                <Setter Property="MinWidth" Value="42" />
                                 <Setter TargetName="ThumbRail" Property="Width" Value="Auto" />
                                 <Setter TargetName="ThumbRail" Property="Height" Value="6" />
-                                <Setter TargetName="ThumbRail" Property="Margin" Value="2,0" />
+                                <Setter TargetName="ThumbRail" Property="Margin" Value="0" />
                                 <Setter TargetName="ThumbRail" Property="VerticalAlignment" Value="Center" />
                                 <Setter TargetName="ThumbRail" Property="HorizontalAlignment" Value="Stretch" />
                             </Trigger>
@@ -500,7 +584,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="ScrollBar">
                         <Grid x:Name="GridRoot" Width="10" Background="Transparent">
-                            <Track x:Name="PART_Track" IsDirectionReversed="True" Focusable="False">
+                            <Track x:Name="PART_Track" Margin="0,7" IsDirectionReversed="True" Focusable="False">
                                 <Track.DecreaseRepeatButton>
                                     <RepeatButton Style="{StaticResource ScrollBarLineButton}" Command="ScrollBar.PageUpCommand" />
                                 </Track.DecreaseRepeatButton>
@@ -519,6 +603,7 @@
                                 <Setter Property="Width" Value="Auto" />
                                 <Setter Property="Height" Value="10" />
                                 <Setter TargetName="Thumb" Property="Tag" Value="Horizontal" />
+                                <Setter TargetName="PART_Track" Property="Margin" Value="7,0" />
                                 <Setter TargetName="PART_Track" Property="IsDirectionReversed" Value="False" />
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
@@ -594,7 +679,7 @@
 
     <Grid x:Name="ShellRoot" Background="{StaticResource ShellBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="54" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -602,72 +687,51 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <Border Grid.Row="0" Grid.ColumnSpan="2" Background="#FFFFFF" BorderBrush="#D9E3ED" BorderThickness="0,0,0,1" MouseLeftButtonDown="TopChrome_MouseLeftButtonDown">
-            <Grid Margin="18,0,10,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <Border Width="32" Height="32" CornerRadius="12" Background="#07111F">
-                        <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=hub}" Fill="#37D3EA" Width="18" Height="18" />
-                    </Border>
-                    <TextBlock Text="ARNet" FontSize="13" FontWeight="SemiBold" Foreground="#0B1020" Margin="12,0,0,0" VerticalAlignment="Center" />
-                    <TextBlock Text=" Discovery" FontSize="13" FontWeight="SemiBold" Foreground="#0EA5C4" VerticalAlignment="Center" />
-                    <Border CornerRadius="9" Background="#E8F7FB" Padding="8,3" Margin="12,0,0,0" BorderBrush="#C8EEF6" BorderThickness="1">
-                        <StackPanel Orientation="Horizontal">
-                            <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=bolt}" Fill="#0EA5C4" Width="12" Height="12" />
-                            <TextBlock Text="Progressive evidence scanner" FontSize="10" Foreground="#52657A" Margin="5,0,0,0" VerticalAlignment="Center" />
-                        </StackPanel>
-                    </Border>
-                </StackPanel>
-                <TextBlock Grid.Column="1" Text="{Binding AdapterSummary}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" Foreground="#52657A" TextTrimming="CharacterEllipsis" MaxWidth="560" />
-                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Button Style="{StaticResource WindowIconButton}" Command="{Binding ToggleAlwaysOnTopCommand}" ToolTip="{Binding AlwaysOnTopToolTip}">
-                        <Grid>
-                            <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=toggle_on}" Fill="#0EA5C4" Width="18" Height="18" Visibility="{Binding IsAlwaysOnTop, Converter={StaticResource BoolToVisible}}" />
-                            <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=toggle_off}" Fill="#94A3B8" Width="18" Height="18" Visibility="{Binding IsAlwaysOnTop, Converter={StaticResource BoolToCollapsedInvert}}" />
-                        </Grid>
-                    </Button>
-                    <Button Style="{StaticResource WindowIconButton}" Click="MinimizeButton_Click">
-                        <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=minimize}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Width="15" Height="15" />
-                    </Button>
-                    <Button Style="{StaticResource WindowIconButton}" Click="MaximizeButton_Click">
-                        <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=open_in_full}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Width="14" Height="14" />
-                    </Button>
-                    <Button Style="{StaticResource CloseWindowButton}" Click="CloseButton_Click">
-                        <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=close}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Width="14" Height="14" />
-                    </Button>
-                </StackPanel>
-            </Grid>
-        </Border>
+        <Grid Grid.Row="0" Grid.Column="0" Margin="24,22,22,12">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <Border Width="40" Height="40" CornerRadius="14" Background="#07111F">
+                    <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=hub}" Fill="#37D3EA" Width="21" Height="21" />
+                </Border>
+                <TextBlock Text="ARNet" FontSize="13" FontWeight="SemiBold" Foreground="#0B1020" Margin="12,0,0,0" VerticalAlignment="Center" />
+                <TextBlock Text=" Discovery" FontSize="13" FontWeight="SemiBold" Foreground="#0EA5C4" VerticalAlignment="Center" />
+                <Border CornerRadius="9" Background="#E8F7FB" Padding="8,3" Margin="12,0,0,0" BorderBrush="#C8EEF6" BorderThickness="1" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal">
+                        <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=bolt}" Fill="#0EA5C4" Width="12" Height="12" />
+                        <TextBlock Text="Progressive evidence scanner" FontSize="10" Foreground="#52657A" Margin="5,0,0,0" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Border>
+                <Border Width="1" Height="24" Background="#D8E2EC" Margin="16,0,16,0" VerticalAlignment="Center" />
+                <TextBlock Text="Devices on your network" FontSize="20" FontWeight="SemiBold" Foreground="#0B1020" VerticalAlignment="Center" />
+            </StackPanel>
+        </Grid>
 
-        <Grid Grid.Row="1" Grid.Column="0" Margin="24,18,22,18">
+        <StackPanel Grid.Row="0" Grid.Column="1" Width="{Binding InspectorPanelWidth}" Margin="0,22,18,12" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="{Binding IsInspectorExpanded, Converter={StaticResource BoolToVisible}}">
+            <TextBlock Text="{Binding AdapterSummary}" Foreground="#52657A" FontSize="11" Margin="0,0,10,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" MaxWidth="160" />
+            <Border Height="32" CornerRadius="12" Background="#FFFFFF" BorderBrush="#CCD7E3" BorderThickness="1" Padding="10,0" VerticalAlignment="Center" Margin="0,0,8,0">
+                <StackPanel Orientation="Horizontal">
+                    <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=info}" Fill="#20BBD7" Width="14" Height="14" />
+                    <TextBlock Text="{Binding ScanStateLabel}" Foreground="#172033" FontSize="11" FontWeight="SemiBold" Margin="7,0,0,0" VerticalAlignment="Center" />
+                </StackPanel>
+            </Border>
+            <Button Style="{StaticResource PremiumButton}" Command="{Binding ToggleAlwaysOnTopCommand}" ToolTip="{Binding AlwaysOnTopToolTip}" MinWidth="128" Height="32" Padding="10,0" Margin="0">
+                <StackPanel Orientation="Horizontal">
+                    <Grid Width="16" Height="16">
+                        <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=toggle_on}" Fill="#0EA5C4" Width="16" Height="16" Visibility="{Binding IsAlwaysOnTop, Converter={StaticResource BoolToVisible}}" />
+                        <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=toggle_off}" Fill="#94A3B8" Width="16" Height="16" Visibility="{Binding IsAlwaysOnTop, Converter={StaticResource BoolToCollapsedInvert}}" />
+                    </Grid>
+                    <TextBlock Text="Always on top" Margin="7,0,0,0" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+        </StackPanel>
+
+        <Grid Grid.Row="1" Grid.Column="0" Margin="24,0,22,18">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" Margin="0,0,0,12">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <StackPanel>
-                    <TextBlock Text="Devices on your network" FontSize="21" FontWeight="SemiBold" Foreground="#0B1020" />
-                </StackPanel>
-                <Border Grid.Column="1" Height="32" CornerRadius="12" Background="#FFFFFF" BorderBrush="#CCD7E3" BorderThickness="1" Padding="12,0" VerticalAlignment="Center">
-                    <StackPanel Orientation="Horizontal">
-                        <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}, ConverterParameter=info}" Fill="#20BBD7" Width="14" Height="14" />
-                        <TextBlock Text="{Binding ScanStateLabel}" Foreground="#172033" FontSize="11" FontWeight="SemiBold" Margin="7,0,0,0" VerticalAlignment="Center" />
-                    </StackPanel>
-                </Border>
-            </Grid>
-
-            <Border Grid.Row="1" Background="#FFFFFF" BorderBrush="#CCD7E3" BorderThickness="1" CornerRadius="18" Padding="14" Effect="{StaticResource ShadowSoft}" Margin="0,0,0,14">
+            <Border Grid.Row="0" Background="{StaticResource SurfaceControlBrush}" BorderBrush="#C9D8E6" BorderThickness="1" CornerRadius="18" Padding="14" Effect="{StaticResource ShadowSoft}" Margin="0,0,0,14">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -787,8 +851,8 @@
                 </Grid>
             </Border>
 
-            <Border Grid.Row="2" Background="Transparent" CornerRadius="20" Effect="{StaticResource ShadowSoft}">
-                <Border Background="#FFFFFF" BorderBrush="#CCD7E3" BorderThickness="1" CornerRadius="18" ClipToBounds="True">
+            <Border Grid.Row="1" Background="Transparent" CornerRadius="20" Effect="{StaticResource ShadowSoft}">
+                <Border Background="{StaticResource SurfaceTableBrush}" BorderBrush="#C9D8E6" BorderThickness="1" CornerRadius="18" ClipToBounds="True">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="44" />
@@ -797,19 +861,59 @@
                         <Border Background="#FAFCFE" BorderBrush="#E2EAF2" BorderThickness="0,0,0,1" CornerRadius="18,18,0,0" Padding="18,0">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1.75*" />
-                                <ColumnDefinition Width="1.0*" />
-                                <ColumnDefinition Width="1.18*" />
-                                <ColumnDefinition Width="1.18*" />
-                                <ColumnDefinition Width="0.70*" />
-                                <ColumnDefinition Width="0.82*" />
+                                <ColumnDefinition Width="{Binding DeviceColumnWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinWidth="220" />
+                                <ColumnDefinition Width="8" />
+                                <ColumnDefinition Width="{Binding IpColumnWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinWidth="140" />
+                                <ColumnDefinition Width="8" />
+                                <ColumnDefinition Width="{Binding ExpectedColumnWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinWidth="140" />
+                                <ColumnDefinition Width="8" />
+                                <ColumnDefinition Width="{Binding ProtocolColumnWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinWidth="180" />
+                                <ColumnDefinition Width="8" />
+                                <ColumnDefinition Width="{Binding PingColumnWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinWidth="86" />
+                                <ColumnDefinition Width="8" />
+                                <ColumnDefinition Width="{Binding StatusColumnWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinWidth="104" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="DEVICE" Style="{StaticResource ColumnHeader}" />
-                            <TextBlock Grid.Column="1" Text="IP ADDRESS" Style="{StaticResource ColumnHeader}" />
-                            <TextBlock Grid.Column="2" Text="EXPECTED" Style="{StaticResource ColumnHeader}" />
-                            <TextBlock Grid.Column="3" Text="PROTOCOLS" Style="{StaticResource ColumnHeader}" />
-                            <TextBlock Grid.Column="4" Text="PING" Style="{StaticResource ColumnHeader}" />
-                            <TextBlock Grid.Column="5" Text="STATUS" Style="{StaticResource ColumnHeader}" HorizontalAlignment="Right" />
+                            <Button Style="{StaticResource TableHeaderButton}" Command="{Binding SortDevicesCommand}" CommandParameter="Device">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="DEVICE" />
+                                    <Path Style="{StaticResource MaterialIcon}" Data="{Binding DeviceSortGlyph, Converter={StaticResource MaterialIconConverter}}" Visibility="{Binding DeviceSortGlyph, Converter={StaticResource StringNotEmptyToVisible}}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Width="10" Height="10" Margin="5,0,0,0" />
+                                </StackPanel>
+                            </Button>
+                            <GridSplitter Grid.Column="1" Style="{StaticResource ColumnResizeSplitter}" />
+                            <Button Grid.Column="2" Style="{StaticResource TableHeaderButton}" Command="{Binding SortDevicesCommand}" CommandParameter="Ip">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="IP ADDRESS" />
+                                    <Path Style="{StaticResource MaterialIcon}" Data="{Binding IpSortGlyph, Converter={StaticResource MaterialIconConverter}}" Visibility="{Binding IpSortGlyph, Converter={StaticResource StringNotEmptyToVisible}}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Width="10" Height="10" Margin="5,0,0,0" />
+                                </StackPanel>
+                            </Button>
+                            <GridSplitter Grid.Column="3" Style="{StaticResource ColumnResizeSplitter}" />
+                            <Button Grid.Column="4" Style="{StaticResource TableHeaderButton}" Command="{Binding SortDevicesCommand}" CommandParameter="Expected">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="EXPECTED" />
+                                    <Path Style="{StaticResource MaterialIcon}" Data="{Binding ExpectedSortGlyph, Converter={StaticResource MaterialIconConverter}}" Visibility="{Binding ExpectedSortGlyph, Converter={StaticResource StringNotEmptyToVisible}}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Width="10" Height="10" Margin="5,0,0,0" />
+                                </StackPanel>
+                            </Button>
+                            <GridSplitter Grid.Column="5" Style="{StaticResource ColumnResizeSplitter}" />
+                            <Button Grid.Column="6" Style="{StaticResource TableHeaderButton}" Command="{Binding SortDevicesCommand}" CommandParameter="Protocols">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="PROTOCOLS" />
+                                    <Path Style="{StaticResource MaterialIcon}" Data="{Binding ProtocolSortGlyph, Converter={StaticResource MaterialIconConverter}}" Visibility="{Binding ProtocolSortGlyph, Converter={StaticResource StringNotEmptyToVisible}}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Width="10" Height="10" Margin="5,0,0,0" />
+                                </StackPanel>
+                            </Button>
+                            <GridSplitter Grid.Column="7" Style="{StaticResource ColumnResizeSplitter}" />
+                            <Button Grid.Column="8" Style="{StaticResource TableHeaderButton}" Command="{Binding SortDevicesCommand}" CommandParameter="Ping">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="PING" />
+                                    <Path Style="{StaticResource MaterialIcon}" Data="{Binding PingSortGlyph, Converter={StaticResource MaterialIconConverter}}" Visibility="{Binding PingSortGlyph, Converter={StaticResource StringNotEmptyToVisible}}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Width="10" Height="10" Margin="5,0,0,0" />
+                                </StackPanel>
+                            </Button>
+                            <GridSplitter Grid.Column="9" Style="{StaticResource ColumnResizeSplitter}" />
+                            <Button Grid.Column="10" Style="{StaticResource TableHeaderButton}" Command="{Binding SortDevicesCommand}" CommandParameter="Status" HorizontalAlignment="Right">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="STATUS" />
+                                    <Path Style="{StaticResource MaterialIcon}" Data="{Binding StatusSortGlyph, Converter={StaticResource MaterialIconConverter}}" Visibility="{Binding StatusSortGlyph, Converter={StaticResource StringNotEmptyToVisible}}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Width="10" Height="10" Margin="5,0,0,0" />
+                                </StackPanel>
+                            </Button>
                         </Grid>
                         </Border>
 
@@ -840,27 +944,32 @@
                             <DataTemplate>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1.75*" />
-                                        <ColumnDefinition Width="1.0*" />
-                                        <ColumnDefinition Width="1.18*" />
-                                        <ColumnDefinition Width="1.18*" />
-                                        <ColumnDefinition Width="0.70*" />
-                                        <ColumnDefinition Width="0.82*" />
+                                        <ColumnDefinition Width="{Binding DataContext.DeviceColumnWidth, RelativeSource={RelativeSource AncestorType=ListBox}}" MinWidth="220" />
+                                        <ColumnDefinition Width="8" />
+                                        <ColumnDefinition Width="{Binding DataContext.IpColumnWidth, RelativeSource={RelativeSource AncestorType=ListBox}}" MinWidth="140" />
+                                        <ColumnDefinition Width="8" />
+                                        <ColumnDefinition Width="{Binding DataContext.ExpectedColumnWidth, RelativeSource={RelativeSource AncestorType=ListBox}}" MinWidth="140" />
+                                        <ColumnDefinition Width="8" />
+                                        <ColumnDefinition Width="{Binding DataContext.ProtocolColumnWidth, RelativeSource={RelativeSource AncestorType=ListBox}}" MinWidth="180" />
+                                        <ColumnDefinition Width="8" />
+                                        <ColumnDefinition Width="{Binding DataContext.PingColumnWidth, RelativeSource={RelativeSource AncestorType=ListBox}}" MinWidth="86" />
+                                        <ColumnDefinition Width="8" />
+                                        <ColumnDefinition Width="{Binding DataContext.StatusColumnWidth, RelativeSource={RelativeSource AncestorType=ListBox}}" MinWidth="104" />
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Orientation="Horizontal">
-                                        <Border Width="38" Height="38" CornerRadius="12" Background="#F7FAFD" BorderBrush="#E2EAF2" BorderThickness="1">
-                                            <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}}" Fill="#172033" Width="17" Height="17" />
+                                        <Border Width="38" Height="38" CornerRadius="12" Background="{Binding Converter={StaticResource DeviceIconBrushConverter}}" BorderBrush="#D7E3EF" BorderThickness="1">
+                                            <Path Style="{StaticResource MaterialIcon}" Data="{Binding Converter={StaticResource MaterialIconConverter}}" Fill="{Binding Converter={StaticResource DeviceIconBrushConverter}, ConverterParameter=Foreground}" Width="17" Height="17" />
                                         </Border>
                                         <StackPanel Margin="11,0,0,0" VerticalAlignment="Center">
                                             <TextBlock Text="{Binding HostTitle}" FontSize="12.6" FontWeight="SemiBold" Foreground="#0B1020" TextTrimming="CharacterEllipsis" />
                                             <TextBlock Text="{Binding ExpectedContextLabel}" FontSize="10.6" Foreground="#60708A" TextTrimming="CharacterEllipsis" />
                                         </StackPanel>
                                     </StackPanel>
-                                    <TextBlock Grid.Column="1" Text="{Binding Ip}" FontFamily="Cascadia Mono, Consolas, Segoe UI Mono" FontSize="11.8" Foreground="#172033" VerticalAlignment="Center" />
-                                    <TextBlock Grid.Column="2" Text="{Binding VendorDisplay}" FontSize="11.3" Foreground="#40516A" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
-                                    <TextBlock Grid.Column="3" Text="{Binding ProtocolSummary}" FontSize="11.2" Foreground="#40516A" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
-                                    <TextBlock Grid.Column="4" Text="{Binding LatencyLabel}" FontSize="11.4" Foreground="#172033" VerticalAlignment="Center" />
-                                    <Border Grid.Column="5" HorizontalAlignment="Right" VerticalAlignment="Center" CornerRadius="13" Padding="9,4" Background="#F5FBFA" BorderBrush="#DCEFEA" BorderThickness="1">
+                                    <TextBlock Grid.Column="2" Text="{Binding Ip}" FontFamily="Cascadia Mono, Consolas, Segoe UI Mono" FontSize="11.8" Foreground="#172033" VerticalAlignment="Center" />
+                                    <TextBlock Grid.Column="4" Text="{Binding VendorDisplay}" FontSize="11.3" Foreground="#40516A" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Grid.Column="6" Text="{Binding ProtocolSummary}" FontSize="11.2" Foreground="#40516A" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Grid.Column="8" Text="{Binding LatencyLabel}" FontSize="11.4" Foreground="#172033" VerticalAlignment="Center" />
+                                    <Border Grid.Column="10" HorizontalAlignment="Right" VerticalAlignment="Center" CornerRadius="13" Padding="9,4" Background="#F5FBFA" BorderBrush="#DCEFEA" BorderThickness="1">
                                         <StackPanel Orientation="Horizontal">
                                             <Ellipse Width="6" Height="6" Fill="{Binding Status, Converter={StaticResource StatusBrushConverter}}" VerticalAlignment="Center" />
                                             <TextBlock Text="{Binding Status, Converter={StaticResource StatusLabelConverter}}" FontSize="10.2" FontWeight="SemiBold" Foreground="{Binding Status, Converter={StaticResource StatusBrushConverter}}" Margin="6,0,0,0" VerticalAlignment="Center" />
@@ -874,7 +983,7 @@
                 </Border>
             </Border>
 
-            <Border Grid.Row="3" Height="{Binding DiagnosticsPanelHeight}" Margin="0,12,0,0" Background="#FFFFFF" BorderBrush="#CCD7E3" BorderThickness="1" CornerRadius="18" ClipToBounds="True" SnapsToDevicePixels="True">
+            <Border Grid.Row="2" Height="{Binding DiagnosticsPanelHeight}" Margin="0,12,0,0" Background="{StaticResource SurfaceDiagnosticsBrush}" BorderBrush="#C9D8E6" BorderThickness="1" CornerRadius="18" ClipToBounds="True" SnapsToDevicePixels="True">
                 <Grid Margin="16,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="38" />
@@ -925,9 +1034,9 @@
 
         <Border Grid.Row="1" Grid.Column="1"
                 Width="{Binding InspectorPanelWidth}"
-                Margin="0,62,18,18"
-                Background="#FFFFFF"
-                BorderBrush="#CCD7E3"
+                Margin="0,0,18,18"
+                Background="{StaticResource SurfacePropertiesBrush}"
+                BorderBrush="#C9D8E6"
                 BorderThickness="1"
                 CornerRadius="20"
                 Effect="{StaticResource ShadowSoft}"
@@ -953,7 +1062,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <StackPanel>
-                        <TextBlock Text="Inspector" FontSize="18" FontWeight="SemiBold" Foreground="#0B1020" />
+                        <TextBlock Text="Properties" FontSize="18" FontWeight="SemiBold" Foreground="#0B1020" />
                         <TextBlock Text="Selected device evidence" FontSize="11" Foreground="#60708A" Margin="0,3,0,0" />
                     </StackPanel>
                     <Button Grid.Column="1" Style="{StaticResource InspectorChevronButton}" Command="{Binding ToggleInspectorCommand}" ToolTip="{Binding InspectorToggleToolTip}">
@@ -972,11 +1081,11 @@
 
                     <ScrollViewer Visibility="{Binding SelectedDevice, Converter={StaticResource NullToVisible}}" VerticalScrollBarVisibility="Auto">
                         <StackPanel>
-                            <Border Background="#FFFFFF" BorderBrush="#D5E0EA" BorderThickness="1" CornerRadius="18" Padding="16" Effect="{StaticResource ShadowSoft}">
+                            <Border Background="{StaticResource SurfacePropertiesCardBrush}" BorderBrush="#D1E0EC" BorderThickness="1" CornerRadius="18" Padding="16" Effect="{StaticResource ShadowSoft}">
                                 <StackPanel>
                                     <StackPanel Orientation="Horizontal">
-                                        <Border Width="58" Height="58" CornerRadius="16" Background="#F7FAFD" BorderBrush="#E2EAF2" BorderThickness="1">
-                                            <Path Style="{StaticResource MaterialIcon}" Data="{Binding SelectedDevice, Converter={StaticResource MaterialIconConverter}}" Fill="#172033" Width="24" Height="24" />
+                                        <Border Width="58" Height="58" CornerRadius="16" Background="{Binding SelectedDevice, Converter={StaticResource DeviceIconBrushConverter}}" BorderBrush="#D7E3EF" BorderThickness="1">
+                                            <Path Style="{StaticResource MaterialIcon}" Data="{Binding SelectedDevice, Converter={StaticResource MaterialIconConverter}}" Fill="{Binding SelectedDevice, Converter={StaticResource DeviceIconBrushConverter}, ConverterParameter=Foreground}" Width="24" Height="24" />
                                         </Border>
                                         <StackPanel Margin="13,0,0,0" VerticalAlignment="Center">
                                             <TextBlock Text="{Binding SelectedDevice.HostTitle}" FontSize="15" FontWeight="SemiBold" Foreground="#0B1020" TextTrimming="CharacterEllipsis" MaxWidth="240" />
@@ -992,7 +1101,7 @@
                                 </StackPanel>
                             </Border>
 
-                            <Border Background="#FFFFFF" BorderBrush="#D5E0EA" BorderThickness="1" CornerRadius="16" Padding="15" Margin="0,12,0,0" Visibility="{Binding SelectedDevice.IsExpectedTarget, Converter={StaticResource BoolToVisible}}">
+                            <Border Background="{StaticResource SurfacePropertiesCardBrush}" BorderBrush="#D1E0EC" BorderThickness="1" CornerRadius="16" Padding="15" Margin="0,12,0,0" Visibility="{Binding SelectedDevice.IsExpectedTarget, Converter={StaticResource BoolToVisible}}">
                                 <StackPanel>
                                     <TextBlock Text="EXPECTED TARGET" Style="{StaticResource SectionLabel}" />
                                     <TextBlock Text="{Binding SelectedDevice.ExpectedDeviceName}" FontSize="12.3" FontWeight="SemiBold" Foreground="#0B1020" TextTrimming="CharacterEllipsis" />
@@ -1001,7 +1110,7 @@
                                 </StackPanel>
                             </Border>
 
-                            <Border Background="#FFFFFF" BorderBrush="#D5E0EA" BorderThickness="1" CornerRadius="16" Padding="15" Margin="0,12,0,0">
+                            <Border Background="{StaticResource SurfacePropertiesCardBrush}" BorderBrush="#D1E0EC" BorderThickness="1" CornerRadius="16" Padding="15" Margin="0,12,0,0">
                                 <StackPanel>
                                     <TextBlock Text="NETWORK EVIDENCE" Style="{StaticResource SectionLabel}" />
                                     <Grid Height="30">
@@ -1036,7 +1145,7 @@
                                 </StackPanel>
                             </Border>
 
-                            <Border Background="#FFFFFF" BorderBrush="#D5E0EA" BorderThickness="1" CornerRadius="16" Padding="15" Margin="0,12,0,0" Visibility="{Binding SelectedDevice.HasOpenPorts, Converter={StaticResource BoolToVisible}}">
+                            <Border Background="{StaticResource SurfacePropertiesCardBrush}" BorderBrush="#D1E0EC" BorderThickness="1" CornerRadius="16" Padding="15" Margin="0,12,0,0" Visibility="{Binding SelectedDevice.HasOpenPorts, Converter={StaticResource BoolToVisible}}">
                                 <StackPanel>
                                     <TextBlock Text="OPEN PORTS" Style="{StaticResource SectionLabel}" />
                                     <ItemsControl ItemsSource="{Binding SelectedDevice.OpenPorts}">
@@ -1060,7 +1169,7 @@
                                 </StackPanel>
                             </Border>
 
-                            <Border Background="#FFFFFF" BorderBrush="#D5E0EA" BorderThickness="1" CornerRadius="16" Padding="15" Margin="0,12,0,0">
+                            <Border Background="{StaticResource SurfacePropertiesCardBrush}" BorderBrush="#D1E0EC" BorderThickness="1" CornerRadius="16" Padding="15" Margin="0,12,0,0">
                                 <StackPanel>
                                     <TextBlock Text="FINGERPRINT" Style="{StaticResource SectionLabel}" />
                                     <TextBlock Text="{Binding SelectedDevice.ProtocolSummary}" TextWrapping="Wrap" Foreground="#172033" FontSize="11.6" />
@@ -1078,7 +1187,7 @@
                     </ScrollViewer>
                 </Grid>
             </Grid>
-        </Grid>
+            </Grid>
         </Border>
     </Grid>
 </Window>

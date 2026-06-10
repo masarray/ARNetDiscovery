@@ -16,6 +16,16 @@ using ARNetDiscovery.Wpf.Commands;
 
 namespace ARNetDiscovery.Wpf.ViewModels;
 
+public enum DeviceSortColumn
+{
+    Device,
+    Ip,
+    Expected,
+    Protocols,
+    Ping,
+    Status
+}
+
 public sealed class MainViewModel : ViewModelBase
 {
     private const int MaxVisibleRows = 5000;
@@ -61,6 +71,14 @@ public sealed class MainViewModel : ViewModelBase
     private bool _isDiagnosticsExpanded = true;
     private bool _isInspectorExpanded = true;
     private bool _isAlwaysOnTop = true;
+    private DeviceSortColumn _sortColumn = DeviceSortColumn.Status;
+    private bool _sortDescending = true;
+    private GridLength _deviceColumnWidth = new(330);
+    private GridLength _ipColumnWidth = new(180);
+    private GridLength _expectedColumnWidth = new(190);
+    private GridLength _protocolColumnWidth = new(260);
+    private GridLength _pingColumnWidth = new(110);
+    private GridLength _statusColumnWidth = new(132);
 
     public MainViewModel()
     {
@@ -91,6 +109,7 @@ public sealed class MainViewModel : ViewModelBase
         ToggleDiagnosticsCommand = new RelayCommand(_ => IsDiagnosticsExpanded = !IsDiagnosticsExpanded);
         ToggleInspectorCommand = new RelayCommand(_ => IsInspectorExpanded = !IsInspectorExpanded);
         ToggleAlwaysOnTopCommand = new RelayCommand(_ => IsAlwaysOnTop = !IsAlwaysOnTop);
+        SortDevicesCommand = new RelayCommand(SortDevices);
 
         _diagnostics.EntryPublished += (_, entry) => RunOnUi(() =>
         {
@@ -125,6 +144,7 @@ public sealed class MainViewModel : ViewModelBase
     public ICommand ToggleDiagnosticsCommand { get; }
     public ICommand ToggleInspectorCommand { get; }
     public ICommand ToggleAlwaysOnTopCommand { get; }
+    public ICommand SortDevicesCommand { get; }
 
     public NetworkAdapterInfo? SelectedAdapter
     {
@@ -203,7 +223,7 @@ public sealed class MainViewModel : ViewModelBase
         }
     }
 
-    public double InspectorPanelWidth => IsInspectorExpanded ? 370 : 56;
+    public double InspectorPanelWidth => IsInspectorExpanded ? 400 : 56;
     public string InspectorToggleToolTip => IsInspectorExpanded ? "Collapse inspector" : "Expand inspector";
 
     public bool IsAlwaysOnTop
@@ -219,6 +239,49 @@ public sealed class MainViewModel : ViewModelBase
     }
 
     public string AlwaysOnTopToolTip => IsAlwaysOnTop ? "Always on top is ON" : "Always on top is OFF";
+
+    public GridLength DeviceColumnWidth
+    {
+        get => _deviceColumnWidth;
+        set => SetGridLength(ref _deviceColumnWidth, value);
+    }
+
+    public GridLength IpColumnWidth
+    {
+        get => _ipColumnWidth;
+        set => SetGridLength(ref _ipColumnWidth, value);
+    }
+
+    public GridLength ExpectedColumnWidth
+    {
+        get => _expectedColumnWidth;
+        set => SetGridLength(ref _expectedColumnWidth, value);
+    }
+
+    public GridLength ProtocolColumnWidth
+    {
+        get => _protocolColumnWidth;
+        set => SetGridLength(ref _protocolColumnWidth, value);
+    }
+
+    public GridLength PingColumnWidth
+    {
+        get => _pingColumnWidth;
+        set => SetGridLength(ref _pingColumnWidth, value);
+    }
+
+    public GridLength StatusColumnWidth
+    {
+        get => _statusColumnWidth;
+        set => SetGridLength(ref _statusColumnWidth, value);
+    }
+
+    public string DeviceSortGlyph => SortGlyph(DeviceSortColumn.Device);
+    public string IpSortGlyph => SortGlyph(DeviceSortColumn.Ip);
+    public string ExpectedSortGlyph => SortGlyph(DeviceSortColumn.Expected);
+    public string ProtocolSortGlyph => SortGlyph(DeviceSortColumn.Protocols);
+    public string PingSortGlyph => SortGlyph(DeviceSortColumn.Ping);
+    public string StatusSortGlyph => SortGlyph(DeviceSortColumn.Status);
 
 
     public bool IsScanning
@@ -988,10 +1051,7 @@ public sealed class MainViewModel : ViewModelBase
 
     private void RebuildVisibleDevices()
     {
-        var filtered = Devices
-            .Where(MatchesFilter)
-            .OrderByDescending(DeviceRenderPriority)
-            .ThenBy(d => IpSortKey(d.Ip))
+        var filtered = ApplyDeviceSort(Devices.Where(MatchesFilter))
             .Take(MaxVisibleRows)
             .ToArray();
 
@@ -1048,6 +1108,70 @@ public sealed class MainViewModel : ViewModelBase
         OnPropertyChanged(nameof(HiddenDeviceCount));
         OnPropertyChanged(nameof(HasHiddenBufferedDevices));
         OnPropertyChanged(nameof(ResultBufferMessage));
+    }
+
+    private IOrderedEnumerable<DiscoveredDeviceSnapshot> ApplyDeviceSort(IEnumerable<DiscoveredDeviceSnapshot> devices)
+    {
+        return _sortColumn switch
+        {
+            DeviceSortColumn.Device => SortBy(devices, d => d.HostTitle),
+            DeviceSortColumn.Ip => SortBy(devices, d => IpSortKey(d.Ip)),
+            DeviceSortColumn.Expected => SortBy(devices, d => d.IsExpectedTarget ? d.ExpectedContextLabel : d.VendorDisplay),
+            DeviceSortColumn.Protocols => SortBy(devices, d => d.ProtocolSummary),
+            DeviceSortColumn.Ping => SortBy(devices, d => d.LatencyMs ?? d.TcpProbeMs ?? int.MaxValue),
+            DeviceSortColumn.Status => SortBy(devices, d => DeviceOnlineRank(d)),
+            _ => SortBy(devices, d => DeviceOnlineRank(d))
+        };
+    }
+
+    private IOrderedEnumerable<DiscoveredDeviceSnapshot> SortBy<TKey>(IEnumerable<DiscoveredDeviceSnapshot> devices, Func<DiscoveredDeviceSnapshot, TKey> keySelector)
+    {
+        var sorted = _sortDescending
+            ? devices.OrderByDescending(keySelector)
+            : devices.OrderBy(keySelector);
+
+        return sorted
+            .ThenByDescending(DeviceRenderPriority)
+            .ThenBy(d => IpSortKey(d.Ip));
+    }
+
+    private void SortDevices(object? parameter)
+    {
+        if (!Enum.TryParse<DeviceSortColumn>(parameter?.ToString(), true, out var column))
+            return;
+
+        if (_sortColumn == column)
+            _sortDescending = !_sortDescending;
+        else
+        {
+            _sortColumn = column;
+            _sortDescending = column is DeviceSortColumn.Status or DeviceSortColumn.Protocols;
+        }
+
+        RebuildVisibleDevices();
+        OnPropertyChanged(nameof(DeviceSortGlyph));
+        OnPropertyChanged(nameof(IpSortGlyph));
+        OnPropertyChanged(nameof(ExpectedSortGlyph));
+        OnPropertyChanged(nameof(ProtocolSortGlyph));
+        OnPropertyChanged(nameof(PingSortGlyph));
+        OnPropertyChanged(nameof(StatusSortGlyph));
+    }
+
+    private string SortGlyph(DeviceSortColumn column)
+        => _sortColumn != column ? string.Empty : _sortDescending ? "down" : "up";
+
+    private bool SetGridLength(ref GridLength field, GridLength value, [System.Runtime.CompilerServices.CallerMemberName] string? propertyName = null)
+    {
+        var normalized = value.IsAbsolute
+            ? new GridLength(Math.Clamp(value.Value, 72, 680))
+            : value;
+
+        if (field.Equals(normalized))
+            return false;
+
+        field = normalized;
+        OnPropertyChanged(propertyName);
+        return true;
     }
 
     private void SelectDevice(DiscoveredDeviceSnapshot? device)
@@ -1272,6 +1396,20 @@ public sealed class MainViewModel : ViewModelBase
         if (IsLikelyLowConfidenceHost(device)) score -= 500;
         return score;
     }
+
+    private static int DeviceOnlineRank(DiscoveredDeviceSnapshot device)
+        => device.Status switch
+        {
+            DeviceStatus.Online => 700,
+            DeviceStatus.Slow => 650,
+            DeviceStatus.PingOnly => 600,
+            DeviceStatus.PortOpenOnly => 560,
+            DeviceStatus.Pending => 300,
+            DeviceStatus.Unknown => 220,
+            DeviceStatus.Offline => 120,
+            DeviceStatus.NoResponse => 80,
+            _ => 0
+        };
 
     private static void RunOnUi(Action action)
     {

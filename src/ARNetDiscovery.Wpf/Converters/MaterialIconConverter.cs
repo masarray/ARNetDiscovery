@@ -53,20 +53,11 @@ public sealed class MaterialIconConverter : IValueConverter
         if (hint.Contains("printer") || hint.Contains("laserjet") || hint.Contains("print"))
             return "print";
 
+        if (hint.Contains("hmi") || hint.Contains("human machine interface") || hint.Contains("operator station") || hint.Contains("operator panel"))
+            return "monitor";
+
         if (snapshot.Kind == DeviceKind.ServerOrWorkstation)
         {
-            hint = string.Join(" ", new[]
-                {
-                    snapshot.ExpectedType,
-                    snapshot.ExpectedDeviceName,
-                    snapshot.HostName,
-                    snapshot.HostTitle,
-                    snapshot.ProtocolSummary,
-                    snapshot.Evidence
-                }
-                .Where(v => !string.IsNullOrWhiteSpace(v)))
-                .ToLowerInvariant();
-
             if (hint.Contains("server") || hint.Contains("wincc") || hint.Contains("historian") || hint.Contains("nas") || hint.Contains("sas server") || hint.Contains("gateway server"))
                 return "hard_drive";
 
@@ -134,6 +125,8 @@ public sealed class MaterialIconConverter : IValueConverter
         "search" => "M9.5,3C5.9,3 3,5.9 3,9.5S5.9,16 9.5,16C11.1,16 12.6,15.4 13.7,14.5L19.2,20L20.5,18.7L15,13.2C15.8,12.1 16,10.8 16,9.5C16,5.9 13.1,3 9.5,3M9.5,5C12,5 14,7 14,9.5S12,14 9.5,14 5,12 5,9.5 7,5 9.5,5Z",
         "toggle_on" => "M280-240q-100 0-170-70T40-480q0-100 70-170t170-70h400q100 0 170 70t70 170q0 100-70 170t-170 70H280Zm400-120q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35Z",
         "toggle_off" => "M280-240q-100 0-170-70T40-480q0-100 70-170t170-70h400q100 0 170 70t70 170q0 100-70 170t-170 70H280Zm0-120q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35Z",
+        "up" => "M7,14L12,9L17,14H7Z",
+        "down" => "M7,10L12,15L17,10H7Z",
         "settings" => "M19.4,13.5C19.5,13 19.5,12.5 19.5,12C19.5,11.5 19.5,11 19.4,10.5L21.5,8.9L19.5,5.4L17,6.4C16.2,5.8 15.4,5.3 14.5,5L14.1,2.3H9.9L9.5,5C8.6,5.3 7.8,5.8 7,6.4L4.5,5.4L2.5,8.9L4.6,10.5C4.5,11 4.5,11.5 4.5,12C4.5,12.5 4.5,13 4.6,13.5L2.5,15.1L4.5,18.6L7,17.6C7.8,18.2 8.6,18.7 9.5,19L9.9,21.7H14.1L14.5,19C15.4,18.7 16.2,18.2 17,17.6L19.5,18.6L21.5,15.1L19.4,13.5M12,15.5A3.5,3.5 0,1 1,12,8.5A3.5,3.5 0,0 1,12,15.5Z",
         "shield" => "M12,2L4,5.5V11.5C4,16.5 7.4,21.1 12,22C16.6,21.1 20,16.5 20,11.5V5.5L12,2M12,4.2L18,6.9V11.5C18,15.4 15.6,18.9 12,19.9C8.4,18.9 6,15.4 6,11.5V6.9L12,4.2Z",
         "speed" => "M12,4A10,10 0,0 0,2,14C2,16.6 3,19 4.7,20.7L6.1,19.3C4.8,17.9 4,16 4,14A8,8 0,1 1,20,14C20,16 19.2,17.9 17.9,19.3L19.3,20.7C21,19 22,16.6 22,14A10,10 0,0 0,12,4M13,13.7L17.5,9.2L16.1,7.8L11.6,12.3C11.2,12.2 10.8,12.3 10.5,12.6C9.7,13.4 9.7,14.6 10.5,15.4C11.3,16.2 12.5,16.2 13.3,15.4C13.7,14.9 13.8,14.3 13.7,13.7Z",
